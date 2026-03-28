@@ -673,7 +673,24 @@ async def render_main_menu(uid: int, lang: str, name: str) -> tuple[str, InlineK
         [InlineKeyboardButton(tx(lang, "b_channel"), url=CHANNEL_URL)],
     ]
     if is_admin(uid):
-        kb.append([InlineKeyboardButton(tx(lang, "b_panel"), callback_data="panel_unified")])
+        kb.append([InlineKeyboardButton(tx(lang, "b_adm_stats"),     callback_data="adm_stats"),
+                   InlineKeyboardButton(tx(lang, "b_adm_broadcast"), callback_data="adm_broadcast")])
+        kb.append([InlineKeyboardButton(tx(lang, "b_adm_block"),  callback_data="adm_block"),
+                   InlineKeyboardButton(tx(lang, "b_adm_info"),   callback_data="adm_userinfo")])
+        kb.append([InlineKeyboardButton(tx(lang, "b_adm_admins"), callback_data="adm_manage_admins")])
+    if is_super(uid):
+        kb.append([InlineKeyboardButton("─── 🌌 ───", callback_data="noop")])
+        kb.append([InlineKeyboardButton(tx(lang, "b_sup_vip"),      callback_data="sup_vips"),
+                   InlineKeyboardButton(tx(lang, "b_sup_channels"), callback_data="sup_channels")])
+        maint_status = tx(lang, "sup_maint_on") if CFG["maintenance"] else tx(lang, "sup_maint_off")
+        kb.append([InlineKeyboardButton(tx(lang, "b_sup_maint", status=maint_status), callback_data="sup_toggle_maint"),
+                   InlineKeyboardButton(tx(lang, "b_sup_botlang"), callback_data="sup_bot_lang")])
+    if is_owner(uid):
+        kb.append([InlineKeyboardButton("─── 👑 ───", callback_data="noop")])
+        kb.append([InlineKeyboardButton(tx(lang, "b_own_super"),   callback_data="own_super_adms"),
+                   InlineKeyboardButton(tx(lang, "b_own_welcome"), callback_data="own_welcome")])
+        kb.append([InlineKeyboardButton(tx(lang, "b_own_reset"),  callback_data="own_reset_stats"),
+                   InlineKeyboardButton(tx(lang, "b_own_backup"), callback_data="own_backup")])
     return text, InlineKeyboardMarkup(kb)
 
 def lang_select_buttons() -> list:
@@ -864,34 +881,12 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         await user_field(uid, "dl", ud.get("dl", 0) + 1)
         return
 
-    # ── Unified Panel ──────────────────────────────────────────────────────────
+    # ── panel_unified → گەڕانەوە بۆ مینوی سەرەکی (پانێڵ ئێستا تێیدایە)
     if data == "panel_unified":
-        if not is_admin(uid): return
-        uids_list = await all_uids()
-        kb = []
-        kb.append([InlineKeyboardButton(tx(lang,"b_adm_stats"),     callback_data="adm_stats"),
-                   InlineKeyboardButton(tx(lang,"b_adm_broadcast"), callback_data="adm_broadcast")])
-        kb.append([InlineKeyboardButton(tx(lang,"b_adm_block"),  callback_data="adm_block"),
-                   InlineKeyboardButton(tx(lang,"b_adm_info"),   callback_data="adm_userinfo")])
-        kb.append([InlineKeyboardButton(tx(lang,"b_adm_admins"), callback_data="adm_manage_admins")])
-        if is_super(uid):
-            kb.append([InlineKeyboardButton("─── 🌌 Super ───", callback_data="noop")])
-            kb.append([InlineKeyboardButton(tx(lang,"b_sup_vip"),      callback_data="sup_vips"),
-                       InlineKeyboardButton(tx(lang,"b_sup_channels"), callback_data="sup_channels")])
-            maint_status = tx(lang,"sup_maint_on") if CFG["maintenance"] else tx(lang,"sup_maint_off")
-            kb.append([InlineKeyboardButton(tx(lang,"b_sup_maint",status=maint_status), callback_data="sup_toggle_maint"),
-                       InlineKeyboardButton(tx(lang,"b_sup_botlang"), callback_data="sup_bot_lang")])
-        if is_owner(uid):
-            kb.append([InlineKeyboardButton("─── 👑 Owner ───", callback_data="noop")])
-            kb.append([InlineKeyboardButton(tx(lang,"b_own_super"),   callback_data="own_super_adms"),
-                       InlineKeyboardButton(tx(lang,"b_own_welcome"), callback_data="own_welcome")])
-            kb.append([InlineKeyboardButton(tx(lang,"b_own_reset"),  callback_data="own_reset_stats"),
-                       InlineKeyboardButton(tx(lang,"b_own_backup"), callback_data="own_backup")])
-        kb += back(lang)
-        await q.edit_message_text(
-            tx(lang,"unified_panel_title", users=len(uids_list), vip=len(vip_set),
-               blocked=len(blocked_set), dl=fmt(CFG.get("total_dl",0)), uptime=uptime()),
-            reply_markup=InlineKeyboardMarkup(kb)); return
+        text, markup = await render_main_menu(uid, lang, q.from_user.first_name)
+        try: await q.edit_message_text(text, parse_mode="HTML", reply_markup=markup)
+        except: await q.message.reply_text(text, parse_mode="HTML", reply_markup=markup)
+        return
 
     if data == "noop": return
 
