@@ -6,9 +6,9 @@
 # ║   ░░ ██║██║ ╚███║███████║   ██║   ██║  ██║     ██████╔╝╚██████╔╝   ██║   ░░ ║
 # ║   ░░ ╚═╝╚═╝  ╚══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝     ╚═════╝  ╚═════╝    ╚═╝   ░░ ║
 # ╠══════════════════════════════════════════════════════════════════════════╣
-# ║  Version  : v1.0                                                         ║
-# ║  Platform : Instagram Reels & Videos Downloader Bot                     ║
-# ║  Stack    : FastAPI · python-telegram-bot · Firebase · Vercel           ║
+# ║  Version  : v2.0 (TikTok Style)                                          ║
+# ║  Platform : Instagram Reels & Videos Downloader Bot                      ║
+# ║  Stack    : FastAPI · python-telegram-bot · Firebase · Vercel            ║
 # ╚══════════════════════════════════════════════════════════════════════════╝
 
 import os, time, logging, httpx, re, html, asyncio, json, traceback
@@ -41,7 +41,7 @@ app = FastAPI()
 
 super_admins_set : set  = {OWNER_ID} if OWNER_ID else set()
 admins_set       : set  = {OWNER_ID} if OWNER_ID else set()
-channels_list    : list = []
+channels_list    : list =[]
 blocked_set      : set  = set()
 vip_set          : set  = set()
 waiting_state    : dict = {}
@@ -59,11 +59,10 @@ CFG: dict = {
 }
 
 # ==============================================================================
-# ── 2. LANGUAGE DICTIONARY (Kurdish / English / Arabic) ───────────────────────
+# ── 2. LANGUAGE DICTIONARY ────────────────────────────────────────────────────
 # ==============================================================================
 L: dict = {
 
-# ─────────────────────────────────── KURDISH ──────────────────────────────────
 "ku": {
     "welcome"         : "👋 سڵاو {name} {badge}\n\n📸 بەخێربێیت بۆ بۆتی داگرتنی ئینستاگرام!\n🎬 ڤیدیۆ و ریلز بدابەزێنە بەبێ واتەرمارک.\n\n━━━━━━━━━━━━━━━━━━━\n👇 لینکی ئینستاگرامەکەت بنێرەم:",
     "help"            : "📚 ڕێنمایی بەکارهێنان\n\n1️⃣ لینکی ڤیدیۆ یان ریلز لە ئینستاگرام کۆپی بکە.\n2️⃣ لینکەکە لێرە پەیست بکە.\n3️⃣ ڤیدیۆکەت دەگات!\n\n✅ پشتگیریکراوەکان:\n• instagram.com/reel/...\n• instagram.com/p/...\n\n💎 VIP: بێ جۆینی ناچاری، خێرایی زۆرتر.\n📩 پەیوەندی: {dev}",
@@ -75,11 +74,11 @@ L: dict = {
     "bot_lang_saved"  : "✅ زمانی سەرەکی بۆتەکە گۆڕدرا بۆ: {lang}",
     "force_join"      : "🔒 جۆینی ناچاری\nتکایە سەرەتا ئەم چەناڵانە جۆین بکە، پاشان کلیک لە '✅ جۆینم کرد' بکە:",
     "processing"      : "🔍 دەگەڕێم بۆ لینکەکە...\nچەند چرکەیەک چاوەڕێبە ⏳",
-    "found"           : "✅ <b>ڤیدیۆکەت ئامادەیە!</b>\n\n📐 بەرز: {width}x{height}\n\n<i>دابەزاندرا بە بۆتی ئینستاگرام 📥</i>",
+    "found"           : "📝 سەردێڕ: {title}\n👤 خاوەن: {owner}\n\n📐 ڕوونی ڤیدیۆ: {width}x{height}\n\n🎬 <a href=\"{vid_url}\">کلیک لێرە بکە — دابەزاندن دەستپێبکە</a>",
     "blocked_msg"     : "⛔ تۆ بلۆک کراویت.",
     "maintenance_msg" : "🛠 چاکسازی کاتی!\n\n⚙️ بۆتەکەمان لە ژێر نوێکردنەوەیەکی گەورەدایە.\n⏳ زووترین کاتێکدا دەگەڕێینەوە!\n\n📩 پەیوەندی: {dev}",
-    "invalid_link"    : "❌ لینکەکە هەڵەیە یان ڤیدیۆکە گشتی نییە!\n\nدڵنیابە لینکەکە:\n• instagram.com/reel/...\n• instagram.com/p/...",
-    "dl_fail"         : "❌ هەڵەیەک ڕوویدا! ناتوانرێت دابەزێنرێت.\nتکایە دووبارە هەوڵبدەرەوە.",
+    "invalid_link"    : "❌ لینکەکە هەڵەیە یان ڤیدیۆکە گشتی نییە!",
+    "dl_fail"         : "❌ هەڵەیەک ڕوویدا! ناتوانرێت دابەزێنرێت.",
     "no_video"        : "❌ ڤیدیۆکە نەدۆزرایەوە! ئەم پۆستە ڤیدیۆی تێدا نییە.",
     "private_post"    : "🔒 ئەم پۆستە تایبەتییە!\nتەنیا پۆستی گشتی دادەگیرێت.",
     "invalid_id"      : "❌ ئایدیەکە دروست نییە! تەنیا ژمارە بنووسە.",
@@ -157,7 +156,6 @@ L: dict = {
     "b_remove"        : "➖ سڕینەوە",
 },
 
-# ─────────────────────────────────── ENGLISH ──────────────────────────────────
 "en": {
     "welcome"         : "👋 Hello {name} {badge}\n\n📸 Welcome to Instagram Downloader Bot!\n🎬 Download videos and Reels without watermark.\n\n━━━━━━━━━━━━━━━━━━━\n👇 Send me an Instagram link:",
     "help"            : "📚 How to Use\n\n1️⃣ Copy an Instagram video or Reel link.\n2️⃣ Paste it here.\n3️⃣ Get your video!\n\n✅ Supported:\n• instagram.com/reel/...\n• instagram.com/p/...\n\n💎 VIP: No forced join, faster downloads.\n📩 Contact: {dev}",
@@ -169,10 +167,10 @@ L: dict = {
     "bot_lang_saved"  : "✅ Bot default language changed to: {lang}",
     "force_join"      : "🔒 Forced Join\nPlease join these channels first, then click '✅ Joined':",
     "processing"      : "🔍 Looking up the link...\nPlease wait ⏳",
-    "found"           : "✅ <b>Your video is ready!</b>\n\n📐 Resolution: {width}x{height}\n\n<i>Downloaded via Instagram Bot 📥</i>",
+    "found"           : "📝 Title: {title}\n👤 Author: {owner}\n\n📐 Resolution: {width}x{height}\n\n🎬 <a href=\"{vid_url}\">Click Here — Start Downloading</a>",
     "blocked_msg"     : "⛔ You are blocked.",
     "maintenance_msg" : "🛠 Maintenance!\n\n⚙️ The bot is under a major update.\n⏳ We'll be back shortly!\n\n📩 Contact: {dev}",
-    "invalid_link"    : "❌ Invalid link or the video is not public!\n\nMake sure the link is:\n• instagram.com/reel/...\n• instagram.com/p/...",
+    "invalid_link"    : "❌ Invalid link or the video is not public!",
     "dl_fail"         : "❌ An error occurred! Could not download.\nPlease try again.",
     "no_video"        : "❌ Video not found! This post has no video.",
     "private_post"    : "🔒 This post is private!\nOnly public posts can be downloaded.",
@@ -251,7 +249,6 @@ L: dict = {
     "b_remove"        : "➖ Remove",
 },
 
-# ─────────────────────────────────── ARABIC ───────────────────────────────────
 "ar": {
     "welcome"         : "👋 مرحباً {name} {badge}\n\n📸 أهلاً بك في بوت تنزيل انستغرام!\n🎬 حمّل الفيديوهات والريلز بدون علامة مائية.\n\n━━━━━━━━━━━━━━━━━━━\n👇 أرسل لي رابط انستغرام:",
     "help"            : "📚 كيفية الاستخدام\n\n1️⃣ انسخ رابط الفيديو أو الريل من انستغرام.\n2️⃣ الصق الرابط هنا.\n3️⃣ احصل على الفيديو!\n\n✅ الروابط المدعومة:\n• instagram.com/reel/...\n• instagram.com/p/...\n\n💎 VIP: بدون اشتراك إجباري، سرعة أعلى.\n📩 للتواصل: {dev}",
@@ -263,10 +260,10 @@ L: dict = {
     "bot_lang_saved"  : "✅ تم تغيير اللغة الافتراضية إلى: {lang}",
     "force_join"      : "🔒 الاشتراك الإجباري\nيرجى الانضمام إلى هذه القنوات أولاً، ثم اضغط '✅ انضممت':",
     "processing"      : "🔍 جاري البحث عن الرابط...\nانتظر لحظة ⏳",
-    "found"           : "✅ <b>الفيديو جاهز!</b>\n\n📐 الدقة: {width}x{height}\n\n<i>تم التنزيل عبر بوت انستغرام 📥</i>",
+    "found"           : "📝 العنوان: {title}\n👤 المالك: {owner}\n\n📐 الدقة: {width}x{height}\n\n🎬 <a href=\"{vid_url}\">اضغط هنا — ابدأ التحميل</a>",
     "blocked_msg"     : "⛔ أنت محظور.",
     "maintenance_msg" : "🛠 صيانة!\n\n⚙️ البوت تحت تحديث كبير.\n⏳ سنعود قريباً!\n\n📩 للتواصل: {dev}",
-    "invalid_link"    : "❌ الرابط غير صحيح أو الفيديو غير عام!\n\nتأكد من أن الرابط:\n• instagram.com/reel/...\n• instagram.com/p/...",
+    "invalid_link"    : "❌ الرابط غير صحيح أو الفيديو غير عام!",
     "dl_fail"         : "❌ حدث خطأ! تعذر التنزيل.\nيرجى المحاولة مجدداً.",
     "no_video"        : "❌ لم يتم العثور على فيديو! هذا المنشور لا يحتوي على فيديو.",
     "private_post"    : "🔒 هذا المنشور خاص!\nلا يمكن تنزيل سوى المنشورات العامة.",
@@ -412,13 +409,13 @@ async def load_cfg(force=False):
     if d:
         if OWNER_ID:
             super_admins_set = set(d.get("super_admins", [OWNER_ID]))
-            admins_set       = set(d.get("admins",       [OWNER_ID]))
+            admins_set       = set(d.get("admins",[OWNER_ID]))
         else:
             super_admins_set = set(d.get("super_admins", []))
-            admins_set       = set(d.get("admins",       []))
-        channels_list = d.get("channels", [])
+            admins_set       = set(d.get("admins",[]))
+        channels_list = d.get("channels",[])
         blocked_set   = set(d.get("blocked", []))
-        vip_set       = set(d.get("vips",    []))
+        vip_set       = set(d.get("vips",[]))
         CFG.update(d.get("cfg", {}))
         last_cfg_load = time.time()
 
@@ -453,7 +450,7 @@ async def get_user_display(uid: int) -> str:
 
 async def check_join(uid, ctx) -> tuple[bool, list]:
     if not channels_list: return True, []
-    missing = []
+    missing =[]
     for ch in channels_list:
         try:
             m = await ctx.bot.get_chat_member(ch, uid)
@@ -480,7 +477,7 @@ async def fetch_instagram(url: str) -> dict | None:
 
     async with httpx.AsyncClient(timeout=timeout, headers=headers, follow_redirects=True) as c:
 
-        # Method 1: og:video meta tag scraping
+        # Method 1: og:video meta tag scraping with title & owner
         try:
             r = await c.get(f"https://www.instagram.com/p/{post_id}/", headers={
                 "User-Agent": "facebookexternalhit/1.1",
@@ -492,10 +489,25 @@ async def fetch_instagram(url: str) -> dict | None:
                     video_url = html.unescape(video_match.group(1))
                     w = re.search(r'<meta property="og:video:width" content="([^"]+)"', r.text)
                     h = re.search(r'<meta property="og:video:height" content="([^"]+)"', r.text)
+                    
+                    # Extract Owner and Title
+                    t_match = re.search(r'<meta property="og:title" content="([^"]+)"', r.text)
+                    owner = "Instagram User"
+                    title = "Instagram Post"
+                    if t_match:
+                        raw_title = html.unescape(t_match.group(1))
+                        if " on Instagram: " in raw_title:
+                            owner, title = raw_title.split(" on Instagram: ", 1)
+                            title = title.strip('" \n')
+                        else:
+                            title = raw_title
+
                     return {
                         "video_url": video_url,
                         "width":  w.group(1) if w else "?",
                         "height": h.group(1) if h else "?",
+                        "title": clean_title(title),
+                        "owner": owner
                     }
         except: pass
 
@@ -528,10 +540,16 @@ async def fetch_instagram(url: str) -> dict | None:
                 media = data.get("data", {}).get("xdt_shortcode_media", {})
                 if media and media.get("is_video") and media.get("video_url"):
                     dims = media.get("dimensions", {})
+                    owner = media.get("owner", {}).get("username", "Instagram User")
+                    edge_cap = media.get("edge_media_to_caption", {}).get("edges", [])
+                    title = edge_cap[0].get("node", {}).get("text", "Instagram Post") if edge_cap else "Instagram Post"
+
                     return {
                         "video_url": media["video_url"],
                         "width":  str(dims.get("width", "?")),
                         "height": str(dims.get("height", "?")),
+                        "title": clean_title(title),
+                        "owner": owner
                     }
         except: pass
 
@@ -541,7 +559,12 @@ async def fetch_instagram(url: str) -> dict | None:
             if r.status_code == 200:
                 d = r.json()
                 if d.get("video"):
-                    return {"video_url": d["video"], "width": "?", "height": "?"}
+                    return {
+                        "video_url": d["video"], 
+                        "width": "?", "height": "?",
+                        "title": "Instagram Post",
+                        "owner": "Instagram"
+                    }
         except: pass
 
     return None
@@ -562,11 +585,8 @@ async def render_main_menu(uid: int, lang: str, name: str) -> tuple[str, InlineK
         if wm and not is_admin(uid)
         else tx(lang, "welcome", name=html.escape(name), badge=badge)
     )
-    kb = [
-        [InlineKeyboardButton(tx(lang, "b_dl"), callback_data="ask_link")],
-        [InlineKeyboardButton(tx(lang, "b_profile"), callback_data="show_profile"),
-         InlineKeyboardButton(tx(lang, "b_vip"),     callback_data="show_vip")],
-        [InlineKeyboardButton(tx(lang, "b_settings"), callback_data="show_settings"),
+    kb = [[InlineKeyboardButton(tx(lang, "b_dl"), callback_data="ask_link")],[InlineKeyboardButton(tx(lang, "b_profile"), callback_data="show_profile"),
+         InlineKeyboardButton(tx(lang, "b_vip"),     callback_data="show_vip")],[InlineKeyboardButton(tx(lang, "b_settings"), callback_data="show_settings"),
          InlineKeyboardButton(tx(lang, "b_help"),     callback_data="show_help")],
         [InlineKeyboardButton(tx(lang, "b_channel"), url=CHANNEL_URL)],
     ]
@@ -623,7 +643,7 @@ async def cmd_start(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
             notify_kb = InlineKeyboardMarkup([[
                 InlineKeyboardButton(tx("ku", "b_notify_block"), callback_data=f"quick_blk_{uid}"),
                 InlineKeyboardButton(tx("ku", "b_notify_vip"),   callback_data=f"quick_vip_{uid}"),
-            ], [
+            ],[
                 InlineKeyboardButton(tx("ku", "b_notify_admin"), callback_data=f"quick_adm_{uid}"),
                 InlineKeyboardButton(tx("ku", "b_notify_info"),  callback_data=f"quick_inf_{uid}"),
             ]])
@@ -651,7 +671,6 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     data = q.data or ""
     await q.answer()
 
-    # ── Quick actions from owner notification ──────────────────────────────────
     if data.startswith("quick_blk_"):
         tid = int(data.split("_")[2])
         blocked_set.add(tid); await save_cfg()
@@ -677,7 +696,6 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
             dl=ud.get("dl", 0), date=ud.get("date","—")
         )); return
 
-    # ── Force join check ───────────────────────────────────────────────────────
     if data == "check_join_btn":
         ok_sub, missing = await check_join(uid, ctx)
         if ok_sub or bypass_join(uid):
@@ -691,14 +709,12 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
             except: pass
         return
 
-    # ── Main menu ──────────────────────────────────────────────────────────────
     if data == "main_menu_render":
         text, markup = await render_main_menu(uid, lang, q.from_user.first_name)
         try: await q.edit_message_text(text, parse_mode="HTML", reply_markup=markup)
         except: await q.message.reply_text(text, parse_mode="HTML", reply_markup=markup)
         return
 
-    # ── Ask for link ───────────────────────────────────────────────────────────
     if data == "ask_link":
         kb = InlineKeyboardMarkup(back(lang))
         try: await q.edit_message_text(
@@ -707,7 +723,6 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         except: pass
         return
 
-    # ── Profile ────────────────────────────────────────────────────────────────
     if data == "show_profile":
         ud = await user_get(uid) or {}
         vip_str  = tx(lang, "vip_yes") if ud.get("vip") else tx(lang, "vip_no")
@@ -722,21 +737,18 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         except: pass
         return
 
-    # ── VIP ────────────────────────────────────────────────────────────────────
     if data == "show_vip":
         try: await q.edit_message_text(tx(lang, "vip_info", dev=DEV),
             parse_mode="HTML", reply_markup=InlineKeyboardMarkup(back(lang)))
         except: pass
         return
 
-    # ── Help ───────────────────────────────────────────────────────────────────
     if data == "show_help":
         try: await q.edit_message_text(tx(lang, "help", dev=DEV),
             parse_mode="HTML", reply_markup=InlineKeyboardMarkup(back(lang)))
         except: pass
         return
 
-    # ── Settings ───────────────────────────────────────────────────────────────
     if data == "show_settings":
         kb = lang_select_buttons() + back(lang)
         try: await q.edit_message_text(tx(lang, "lang_title"),
@@ -763,7 +775,6 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
                 await q.answer(tx(lang, "bot_lang_saved", lang=LANG_NAMES.get(chosen, chosen)), show_alert=True)
         return
 
-    # ── Unified Panel ──────────────────────────────────────────────────────────
     if data == "panel_unified":
         if not is_admin(uid): return
         all_u = await db_get("users") or {}
@@ -773,12 +784,10 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
             vip=vip_c, blocked=len(blocked_set),
             dl=CFG.get("total_dl", 0), uptime=uptime()
         )
-        kb = []
+        kb =[]
         if is_admin(uid):
-            kb += [
-                [InlineKeyboardButton(tx(lang, "b_adm_stats"),     callback_data="adm_stats"),
-                 InlineKeyboardButton(tx(lang, "b_adm_broadcast"), callback_data="adm_broadcast")],
-                [InlineKeyboardButton(tx(lang, "b_adm_block"),     callback_data="adm_block"),
+            kb += [[InlineKeyboardButton(tx(lang, "b_adm_stats"),     callback_data="adm_stats"),
+                 InlineKeyboardButton(tx(lang, "b_adm_broadcast"), callback_data="adm_broadcast")],[InlineKeyboardButton(tx(lang, "b_adm_block"),     callback_data="adm_block"),
                  InlineKeyboardButton(tx(lang, "b_adm_info"),      callback_data="adm_info")],
             ]
         if is_super(uid):
@@ -790,7 +799,6 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         except: pass
         return
 
-    # ── Admin actions ──────────────────────────────────────────────────────────
     if data == "adm_stats":
         if not is_admin(uid): return
         all_u = await db_get("users") or {}
@@ -835,17 +843,12 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         except: pass
         return
 
-    # ── Super Panel ────────────────────────────────────────────────────────────
     if data == "sup_panel":
         if not is_super(uid): return
         maint_status = tx(lang, "sup_maint_on") if CFG["maintenance"] else tx(lang, "sup_maint_off")
-        kb = [
-            [InlineKeyboardButton(f"🛠 {maint_status}", callback_data="sup_toggle_maint")],
-            [InlineKeyboardButton(tx(lang, "b_sup_admins"),   callback_data="sup_list_admins"),
-             InlineKeyboardButton(tx(lang, "b_sup_supers"),   callback_data="sup_list_supers")],
-            [InlineKeyboardButton(tx(lang, "b_sup_vip"),      callback_data="sup_list_vip"),
-             InlineKeyboardButton(tx(lang, "b_sup_channels"), callback_data="sup_list_channels")],
-            [InlineKeyboardButton(tx(lang, "b_sup_welcome"),  callback_data="sup_set_welcome"),
+        kb = [[InlineKeyboardButton(f"🛠 {maint_status}", callback_data="sup_toggle_maint")],[InlineKeyboardButton(tx(lang, "b_sup_admins"),   callback_data="sup_list_admins"),
+             InlineKeyboardButton(tx(lang, "b_sup_supers"),   callback_data="sup_list_supers")],[InlineKeyboardButton(tx(lang, "b_sup_vip"),      callback_data="sup_list_vip"),
+             InlineKeyboardButton(tx(lang, "b_sup_channels"), callback_data="sup_list_channels")],[InlineKeyboardButton(tx(lang, "b_sup_welcome"),  callback_data="sup_set_welcome"),
              InlineKeyboardButton(tx(lang, "b_sup_bot_lang"), callback_data="sup_set_bot_lang")],
         ] + back(lang, "panel_unified")
         try: await q.edit_message_text(tx(lang, "sup_panel_title"),
@@ -882,8 +885,7 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     if data == "sup_list_channels":
         if not is_super(uid): return
         ch_text = "\n".join(channels_list) if channels_list else tx(lang, "sup_ch_empty")
-        kb = [
-            [InlineKeyboardButton(tx(lang, "b_add"),    callback_data="sup_add_ch"),
+        kb = [[InlineKeyboardButton(tx(lang, "b_add"),    callback_data="sup_add_ch"),
              InlineKeyboardButton(tx(lang, "b_remove"), callback_data="sup_rm_ch_menu")],
         ] + back(lang, "sup_panel")
         try: await q.edit_message_text(
@@ -906,8 +908,7 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         if not is_super(uid): return
         adm_list = [str(a) for a in admins_set if not is_super(a)]
         text = tx(lang, "sup_admins_title", count=len(adm_list)) + "\n" + "\n".join(adm_list) if adm_list else tx(lang, "sup_admins_title", count=0) + "\n—"
-        kb = [
-            [InlineKeyboardButton(tx(lang, "b_add"),    callback_data="sup_add_admin"),
+        kb = [[InlineKeyboardButton(tx(lang, "b_add"),    callback_data="sup_add_admin"),
              InlineKeyboardButton(tx(lang, "b_remove"), callback_data="sup_rm_admin")],
         ] + back(lang, "sup_panel")
         try: await q.edit_message_text(text, reply_markup=InlineKeyboardMarkup(kb))
@@ -936,10 +937,9 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
     if data == "sup_list_vip":
         if not is_super(uid): return
-        vip_list = [str(v) for v in vip_set]
+        vip_list =[str(v) for v in vip_set]
         text = tx(lang, "sup_vip_title", count=len(vip_list)) + "\n" + ("\n".join(vip_list) if vip_list else "—")
-        kb = [
-            [InlineKeyboardButton(tx(lang, "b_add"),    callback_data="sup_add_vip"),
+        kb = [[InlineKeyboardButton(tx(lang, "b_add"),    callback_data="sup_add_vip"),
              InlineKeyboardButton(tx(lang, "b_remove"), callback_data="sup_rm_vip")],
         ] + back(lang, "sup_panel")
         try: await q.edit_message_text(text, reply_markup=InlineKeyboardMarkup(kb))
@@ -974,7 +974,6 @@ async def on_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     txt  = msg.text or ""
     lang = await get_user_lang(uid)
 
-    # ── Waiting States ─────────────────────────────────────────────────────────
     if uid in waiting_state:
         state = waiting_state.pop(uid)
 
@@ -1050,17 +1049,17 @@ async def on_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         kb.append([InlineKeyboardButton(tx(lang, "b_joined"), callback_data="check_join_btn")])
         await msg.reply_text(tx(lang, "force_join"), reply_markup=InlineKeyboardMarkup(kb)); return
 
-    # Progress animation
-    frames = ["⬜⬜⬜⬜⬜", "⬛⬜⬜⬜⬜", "⬛⬛⬜⬜⬜", "⬛⬛⬛⬜⬜", "⬛⬛⬛⬛⬜", "⬛⬛⬛⬛⬛"]
-    status = await msg.reply_text(f"🔍 {frames[0]}")
-
-    async def animated_progress():
-        for frame in frames[1:]:
-            try: await status.edit_text(f"🔍 {frame}")
+    # TikTok Style Progress Animation
+    status = await msg.reply_text("🔍 ⬜⬜⬜⬜⬜")
+    
+    async def animated_progress(status_msg):
+        frames =["⬜⬜⬜⬜⬜", "⬛⬜⬜⬜⬜", "⬛⬛⬜⬜⬜", "⬛⬛⬛⬜⬜", "⬛⬛⬛⬛⬜", "⬛⬛⬛⬛⬛"]
+        for frame in frames:
+            try: await status_msg.edit_text(f"🔍 {frame}")
             except: pass
             await asyncio.sleep(0.4)
 
-    progress_task = asyncio.create_task(animated_progress())
+    progress_task = asyncio.create_task(animated_progress(status))
 
     try:
         data = await fetch_instagram(txt)
@@ -1076,15 +1075,19 @@ async def on_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         try: await status.delete()
         except: pass
 
-        caption = tx(lang, "found", width=data.get("width","?"), height=data.get("height","?"))
+        # Format Caption TikTok Style
+        caption = tx(lang, "found", 
+            title=html.escape(data.get("title", "Instagram Post")), 
+            owner=html.escape(data.get("owner", "Instagram User")),
+            width=data.get("width", "?"), 
+            height=data.get("height", "?"),
+            vid_url=video_url
+        )
 
         try:
             await ctx.bot.send_video(uid, video_url, caption=caption, parse_mode="HTML")
         except Exception:
-            # If video is too large to send directly, send the link
-            await ctx.bot.send_message(uid,
-                f"{caption}\n\n📥 <a href='{video_url}'>لینکی ڤیدیۆ — کلیک بکە دابەزێنرێت</a>",
-                parse_mode="HTML")
+            await ctx.bot.send_message(uid, caption, parse_mode="HTML")
 
         CFG["total_dl"] = CFG.get("total_dl", 0) + 1
         await save_cfg()
@@ -1139,7 +1142,6 @@ async def health_check():
         "uptime": uptime(),
     }
 
-# REST API endpoint for direct use (website / other bots)
 @app.get("/api/video")
 async def get_video(postUrl: str = ""):
     if not postUrl:
