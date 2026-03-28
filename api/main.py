@@ -23,6 +23,8 @@
 ╚══════════════════════════════════════════════════════════════════════════╝
 
 import os, time, logging, httpx, re, html, asyncio, json, traceback
+import subprocess
+import uuid
 from datetime import datetime
 from fastapi import FastAPI, Request
 from telegram import (
@@ -1149,26 +1151,44 @@ try:
             await ctx.bot.send_message(uid, caption, parse_mode="HTML")  
 
     # 2. Send MP3 Audio Separately (if available)  
-    if audio_url:
+    # 2. Extract MP3 from Video (REAL SOLUTION)
+video_url = data.get("video_url")
+
+if video_url:
     try:
-        # هەوڵی یەکەم: وەک audio
+        file_id = str(uuid.uuid4())
+        video_file = f"/tmp/{file_id}.mp4"
+        audio_file = f"/tmp/{file_id}.mp3"
+
+        # Download video
+        async with httpx.AsyncClient() as c:
+            r = await c.get(video_url)
+            with open(video_file, "wb") as f:
+                f.write(r.content)
+
+        # Convert to MP3 using ffmpeg
+        subprocess.run([
+            "ffmpeg", "-y",
+            "-i", video_file,
+            "-q:a", "0",
+            "-map", "a",
+            audio_file
+        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+        # Send MP3
         await ctx.bot.send_audio(
             chat_id=uid,
-            audio=audio_url,
+            audio=open(audio_file, "rb"),
             title=html.escape(data.get("title", "Instagram Audio")[:30]),
             performer=html.escape(data.get("owner", "Instagram"))
         )
+
+        # Clean files
+        os.remove(video_file)
+        os.remove(audio_file)
+
     except Exception as e:
-        log.warning(f"Audio send_audio failed: {e}")
-        try:
-            # هەوڵی دووەم: وەک document (fallback)
-            await ctx.bot.send_document(
-                chat_id=uid,
-                document=audio_url,
-                caption="🎵 MP3 Audio"
-            )
-        except Exception as e2:
-            log.error(f"Audio fallback failed: {e2}")
+        log.error(f"MP3 extract failed: {e}")
 
     # Update stats  
     CFG["total_dl"] = CFG.get("total_dl", 0) + 1  
