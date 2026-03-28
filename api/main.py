@@ -23,8 +23,6 @@
 ╚══════════════════════════════════════════════════════════════════════════╝
 
 import os, time, logging, httpx, re, html, asyncio, json, traceback
-import subprocess
-import uuid
 from datetime import datetime
 from fastapi import FastAPI, Request
 from telegram import (
@@ -1141,65 +1139,29 @@ try:
             await asyncio.sleep(1)  
         try: await w.delete()  
         except: pass  
-    else:  
-        if video_url:  
-            try:  
-                await ctx.bot.send_video(uid, video_url, caption=caption, parse_mode="HTML")  
-            except Exception:  
-                await ctx.bot.send_message(uid, f"{caption}\n\n📥 <a href='{video_url}'>لینکی ڕاستەوخۆ بۆ دابەزاندن</a>", parse_mode="HTML")  
-        else:  
+    else:
+        if video_url:
+            try: await ctx.bot.send_video(uid, video_url, caption=caption, parse_mode="HTML")
+            except: await ctx.bot.send_message(uid, f"{caption}\n📥 <a href='{video_url}'>Link</a>", parse_mode="HTML")
+        else:
             await ctx.bot.send_message(uid, caption, parse_mode="HTML")  
 
-    # 2. Send MP3 Audio Separately (if available)  
-    # 2. Extract MP3 from Video (REAL SOLUTION)
-video_url = data.get("video_url")
+    # 2. Send Audio (TikTok Style — use audio_url if available, skip otherwise)
+    aurl = data.get("audio_url")
+    if aurl:
+        try: await ctx.bot.send_audio(uid, aurl, title="Instagram Audio", performer="Instagram")
+        except: pass
 
-if video_url:
-    try:
-        file_id = str(uuid.uuid4())
-        video_file = f"/tmp/{file_id}.mp4"
-        audio_file = f"/tmp/{file_id}.mp3"
+    # Update stats
+    CFG["total_dl"] = CFG.get("total_dl", 0) + 1
+    await save_cfg()
+    ud = await user_get(uid) or {}
+    await user_field(uid, "dl", ud.get("dl", 0) + 1)
 
-        # Download video
-        async with httpx.AsyncClient() as c:
-            r = await c.get(video_url)
-            with open(video_file, "wb") as f:
-                f.write(r.content)
-
-        # Convert to MP3 using ffmpeg
-        subprocess.run([
-            "ffmpeg", "-y",
-            "-i", video_file,
-            "-q:a", "0",
-            "-map", "a",
-            audio_file
-        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
-        # Send MP3
-        await ctx.bot.send_audio(
-            chat_id=uid,
-            audio=open(audio_file, "rb"),
-            title=html.escape(data.get("title", "Instagram Audio")[:30]),
-            performer=html.escape(data.get("owner", "Instagram"))
-        )
-
-        # Clean files
-        os.remove(video_file)
-        os.remove(audio_file)
-
-    except Exception as e:
-        log.error(f"MP3 extract failed: {e}")
-
-    # Update stats  
-    CFG["total_dl"] = CFG.get("total_dl", 0) + 1  
-    await save_cfg()  
-    ud = await user_get(uid) or {}  
-    await user_field(uid, "dl", ud.get("dl", 0) + 1)  
-
-except Exception as e:  
-    progress_task.cancel()  
-    log.error(f"Instagram Download Error: {traceback.format_exc()}")  
-    try: await status.edit_text(tx(lang, "dl_fail"))  
+except Exception as e:
+    progress_task.cancel()
+    log.error(f"Instagram Download Error: {traceback.format_exc()}")
+    try: await status.edit_text(tx(lang, "dl_fail"))
     except: pass
 
 ==============================================================================
