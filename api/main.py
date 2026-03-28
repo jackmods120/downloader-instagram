@@ -11,19 +11,16 @@
 # ║  Stack    : FastAPI · python-telegram-bot · Firebase · Vercel           ║
 # ╚══════════════════════════════════════════════════════════════════════════╝
 
-import os, time, logging, httpx, re, html, asyncio, json, io, traceback
+import os, time, logging, httpx, re, html, asyncio, json, traceback
 from datetime import datetime
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
 from telegram import (
     Update, InlineKeyboardButton, InlineKeyboardMarkup,
-    InputMediaPhoto, ForceReply
 )
 from telegram.ext import (
     ApplicationBuilder, CommandHandler, ContextTypes,
     MessageHandler, CallbackQueryHandler, filters,
 )
-from telegram.constants import ChatMemberStatus
 from telegram.error import BadRequest
 
 # ==============================================================================
@@ -59,8 +56,6 @@ CFG: dict = {
     "admin_bypass" : True,
     "total_dl"     : 0,
     "total_users"  : 0,
-    "max_photos"   : 15,
-    "active_api"   : "auto",
 }
 
 # ==============================================================================
@@ -160,15 +155,6 @@ L: dict = {
     "b_sup_bot_lang"  : "🌍 زمانی بۆت",
     "b_add"           : "➕ زیادکردن",
     "b_remove"        : "➖ سڕینەوە",
-    "session_expired" : "⚠️ کات بەسەرچوو! لینکەکە سەرلەنوێ بنێرەوە.",
-    "no_photo"        : "❌ ئەم پۆستە وێنەی تێدا نییە!",
-    "no_audio"        : "❌ دەنگەکە بەردەست نییە!",
-    "b_video"         : "🎥 ڤیدیۆ (بێ واتەرمارک)",
-    "b_photos"        : "📸 وێنەکان ({n})",
-    "b_audio"         : "🎵 گۆرانی (MP3)",
-    "b_delete"        : "🗑 سڕینەوە",
-    "sending_photos"  : "📸 وێنەکان ئامادە دەکرێن...",
-    "found_stats"     : "📝 سەردێڕ: {title}\n👤 خاوەن: {owner}\n\n📊 ئامارەکان:\n👁 بینەر: {views}  \n❤️ لایک: {likes}  \n💬 کۆمێنت: {comments}\n\n🎬 <a href=\"https://t.me/Instagram_Downloader_Jack_Robot\">کلیک لێرە بکە — دابەزاندن دەستپێبکە</a>",
 },
 
 # ─────────────────────────────────── ENGLISH ──────────────────────────────────
@@ -263,15 +249,6 @@ L: dict = {
     "b_sup_bot_lang"  : "🌍 Bot Language",
     "b_add"           : "➕ Add",
     "b_remove"        : "➖ Remove",
-    "session_expired" : "⚠️ Session expired! Please send the link again.",
-    "no_photo"        : "❌ This post has no photos!",
-    "no_audio"        : "❌ Audio not available!",
-    "b_video"         : "🎥 Video (No Watermark)",
-    "b_photos"        : "📸 Photos ({n})",
-    "b_audio"         : "🎵 Audio (MP3)",
-    "b_delete"        : "🗑 Delete",
-    "sending_photos"  : "📸 Preparing photos...",
-    "found_stats"     : "📝 Title: {title}\n👤 Author: {owner}\n\n📊 Stats:\n👁 Views: {views}  \n❤️ Likes: {likes}  \n💬 Comments: {comments}\n\n🎬 <a href=\"https://t.me/Instagram_Downloader_Jack_Robot\">Click Here — Start Downloading</a>",
 },
 
 # ─────────────────────────────────── ARABIC ───────────────────────────────────
@@ -366,15 +343,6 @@ L: dict = {
     "b_sup_bot_lang"  : "🌍 لغة البوت",
     "b_add"           : "➕ إضافة",
     "b_remove"        : "➖ حذف",
-    "session_expired" : "⚠️ انتهت الجلسة! أرسل الرابط مجدداً.",
-    "no_photo"        : "❌ هذا المنشور لا يحتوي على صور!",
-    "no_audio"        : "❌ الصوت غير متاح!",
-    "b_video"         : "🎥 فيديو (بدون علامة مائية)",
-    "b_photos"        : "📸 الصور ({n})",
-    "b_audio"         : "🎵 الصوت (MP3)",
-    "b_delete"        : "🗑 حذف",
-    "sending_photos"  : "📸 جاري تجهيز الصور...",
-    "found_stats"     : "📝 العنوان: {title}\n👤 المالك: {owner}\n\n📊 الإحصائيات:\n👁 مشاهدة: {views}  \n❤️ إعجاب: {likes}  \n💬 تعليق: {comments}\n\n🎬 <a href=\"https://t.me/Instagram_Downloader_Jack_Robot\">اضغط هنا — ابدأ التحميل</a>",
 },
 }
 
@@ -469,16 +437,6 @@ async def user_put(uid, data):            await db_put(f"users/{uid}", data)
 async def user_field(uid, field, val):    await db_put(f"users/{uid}/{field}", val)
 async def user_exists(uid) -> bool:       return (await db_get(f"users/{uid}")) is not None
 async def all_uids() -> list:             return [int(k) for k in (await db_get("users") or {}).keys()]
-async def all_users_data() -> dict:       return await db_get("users") or {}
-
-async def session_save(uid, data):
-    data["_ts"] = int(time.time())
-    await db_put(f"sessions/{uid}", data)
-
-async def session_get(uid) -> dict | None:
-    d = await db_get(f"sessions/{uid}")
-    if d and int(time.time()) - d.get("_ts", 0) <= SESSION_TTL: return d
-    return None
 
 async def get_user_lang(uid: int) -> str:
     ud = await db_get(f"users/{uid}/lang")
@@ -499,6 +457,7 @@ async def check_join(uid, ctx) -> tuple[bool, list]:
     for ch in channels_list:
         try:
             m = await ctx.bot.get_chat_member(ch, uid)
+            from telegram.constants import ChatMemberStatus
             if m.status in (ChatMemberStatus.LEFT, ChatMemberStatus.BANNED):
                 missing.append(ch)
         except: missing.append(ch)
@@ -746,64 +705,6 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
             "📎 لینکی ئینستاگرامەکەت بنێرەم:\n\n<i>نمونە: https://www.instagram.com/reel/ABC123/</i>",
             parse_mode="HTML", reply_markup=kb)
         except: pass
-        return
-
-    # ── close/delete ───────────────────────────────────────────────────────────
-    if data == "close":
-        try: await q.message.delete()
-        except: pass
-        return
-
-    # ── Download buttons (TikTok style — session based) ────────────────────────
-    if data.startswith("dl_"):
-        sess = await session_get(uid)
-        if not sess: await q.answer(tx(lang, "session_expired"), show_alert=True); return
-
-        _title = html.escape(str(sess.get('title') or sess.get('owner') or 'Instagram Post'))
-        _owner = html.escape(str(sess.get('owner') or 'Instagram'))
-        cap = (f"📸 {_title}\n👤 {_owner}\n\n"
-               "🎬 <a href='https://t.me/Instagram_Downloader_Jack_Robot'>کلیک لێرە بکە — دابەزاندن دەستپێبکە</a>")
-        del_kb = InlineKeyboardMarkup([[InlineKeyboardButton(tx(lang, "b_delete"), callback_data="close")]])
-
-        if data == "dl_photo":
-            imgs = sess.get("images", [])
-            if not imgs: await q.answer(tx(lang, "no_photo"), show_alert=True); return
-            try: await q.message.delete()
-            except: pass
-            w = await ctx.bot.send_message(uid, tx(lang, "sending_photos"))
-            for i in range(0, min(len(imgs), int(CFG.get("max_photos", 15))), 10):
-                chunk = imgs[i:i+10]
-                media = [InputMediaPhoto(u) for u in chunk]
-                if i == 0: media[0].caption = cap; media[0].parse_mode = "HTML"
-                try: await ctx.bot.send_media_group(uid, media)
-                except:
-                    for u in chunk:
-                        try: await ctx.bot.send_photo(uid, u)
-                        except: pass
-                await asyncio.sleep(1)
-            try: await w.delete()
-            except: pass
-
-        elif data == "dl_video":
-            vurl = sess.get("video_url")
-            if not vurl: await q.answer(tx(lang, "no_video"), show_alert=True); return
-            try: await q.message.delete()
-            except: pass
-            try: await ctx.bot.send_video(uid, vurl, caption=cap, parse_mode="HTML", reply_markup=del_kb)
-            except: await ctx.bot.send_message(uid, f"{cap}\n📥 <a href=\'{vurl}\'>Link</a>", parse_mode="HTML", reply_markup=del_kb)
-
-        elif data == "dl_audio":
-            aurl = sess.get("audio_url")
-            if not aurl: await q.answer(tx(lang, "no_audio"), show_alert=True); return
-            try: await q.message.delete()
-            except: pass
-            try: await ctx.bot.send_audio(uid, aurl, caption=cap, parse_mode="HTML", title="Instagram Audio", performer="Instagram", reply_markup=del_kb)
-            except: await ctx.bot.send_message(uid, f"{cap}\n🎵 <a href=\'{aurl}\'>Link</a>", parse_mode="HTML", reply_markup=del_kb)
-
-        CFG["total_dl"] = CFG.get("total_dl", 0) + 1
-        await save_cfg()
-        ud = await user_get(uid) or {}
-        await user_field(uid, "dl", ud.get("dl", 0) + 1)
         return
 
     # ── Profile ────────────────────────────────────────────────────────────────
@@ -1139,8 +1040,9 @@ async def on_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     if is_blocked(uid): return
     if CFG["maintenance"] and not is_admin(uid):
         await msg.reply_text(tx(lang, "maintenance_msg", dev=DEV)); return
-    if not any(x in txt for x in ("instagram.com/reel", "instagram.com/p/")):
-        return
+
+    is_insta = "instagram.com/reel" in txt or "instagram.com/p/" in txt
+    if not is_insta: return
 
     ok_sub, missing = await check_join(uid, ctx)
     if not ok_sub and not bypass_join(uid):
@@ -1148,70 +1050,50 @@ async def on_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         kb.append([InlineKeyboardButton(tx(lang, "b_joined"), callback_data="check_join_btn")])
         await msg.reply_text(tx(lang, "force_join"), reply_markup=InlineKeyboardMarkup(kb)); return
 
-    async def animated_progress(status_msg):
-        frames = ["⬜⬜⬜⬜⬜","⬛⬜⬜⬜⬜","⬛⬛⬜⬜⬜","⬛⬛⬛⬜⬜","⬛⬛⬛⬛⬜","⬛⬛⬛⬛⬛"]
-        for frame in frames:
-            try: await status_msg.edit_text(f"🔍 {frame}")
+    # Progress animation
+    frames = ["⬜⬜⬜⬜⬜", "⬛⬜⬜⬜⬜", "⬛⬛⬜⬜⬜", "⬛⬛⬛⬜⬜", "⬛⬛⬛⬛⬜", "⬛⬛⬛⬛⬛"]
+    status = await msg.reply_text(f"🔍 {frames[0]}")
+
+    async def animated_progress():
+        for frame in frames[1:]:
+            try: await status.edit_text(f"🔍 {frame}")
             except: pass
             await asyncio.sleep(0.4)
 
-    status = await msg.reply_text("🔍 ⬜⬜⬜⬜⬜")
-    progress_task = asyncio.create_task(animated_progress(status))
+    progress_task = asyncio.create_task(animated_progress())
 
     try:
-        insta_data = await fetch_instagram(txt)
+        data = await fetch_instagram(txt)
         progress_task.cancel()
-        if not insta_data:
+
+        if not data:
             await status.edit_text(tx(lang, "invalid_link")); return
 
-        await session_save(uid, insta_data)
-
-        # Caption with stats if available, otherwise simple caption
-        if insta_data.get("title") or insta_data.get("owner"):
-            from functools import partial
-            caption = tx(lang, "found_stats",
-                title=html.escape(str(insta_data.get("title", "Instagram Post"))[:80]),
-                owner=html.escape(str(insta_data.get("owner", "Instagram"))),
-                views=fmt(insta_data.get("views", 0)),
-                likes=fmt(insta_data.get("likes", 0)),
-                comments=fmt(insta_data.get("comments", 0)),
-            )
-        else:
-            caption = tx(lang, "found",
-                width=insta_data.get("width","?"),
-                height=insta_data.get("height","?"))
+        video_url = data.get("video_url")
+        if not video_url:
+            await status.edit_text(tx(lang, "no_video")); return
 
         try: await status.delete()
         except: pass
 
-        n_photos = len(insta_data.get("images", []))
-        kb = []
-        if insta_data.get("video_url"):
-            kb.append([InlineKeyboardButton(tx(lang, "b_video"), callback_data="dl_video")])
-        if n_photos > 0:
-            kb.append([InlineKeyboardButton(tx(lang, "b_photos", n=n_photos), callback_data="dl_photo")])
-        if insta_data.get("audio_url"):
-            kb.append([InlineKeyboardButton(tx(lang, "b_audio"), callback_data="dl_audio")])
-        if not kb:
-            # فەقەت ڤیدیۆ هەیە بەڵام لە داتادا images نییە — ناردنی ڕاستەوخۆ
-            video_url = insta_data.get("video_url")
-            if video_url:
-                try: await ctx.bot.send_video(uid, video_url, caption=caption, parse_mode="HTML")
-                except: await ctx.bot.send_message(uid, f"{caption}\n📥 <a href='{video_url}'>Link</a>", parse_mode="HTML")
-                CFG["total_dl"] = CFG.get("total_dl", 0) + 1
-                await save_cfg()
-                ud = await user_get(uid) or {}
-                await user_field(uid, "dl", ud.get("dl", 0) + 1)
-            else:
-                await ctx.bot.send_message(uid, tx(lang, "no_video"))
-            return
+        caption = tx(lang, "found", width=data.get("width","?"), height=data.get("height","?"))
 
-        kb.append([InlineKeyboardButton(tx(lang, "b_delete"), callback_data="close")])
-        await ctx.bot.send_message(uid, caption, parse_mode="HTML", reply_markup=InlineKeyboardMarkup(kb))
+        try:
+            await ctx.bot.send_video(uid, video_url, caption=caption, parse_mode="HTML")
+        except Exception:
+            # If video is too large to send directly, send the link
+            await ctx.bot.send_message(uid,
+                f"{caption}\n\n📥 <a href='{video_url}'>لینکی ڤیدیۆ — کلیک بکە دابەزێنرێت</a>",
+                parse_mode="HTML")
+
+        CFG["total_dl"] = CFG.get("total_dl", 0) + 1
+        await save_cfg()
+        ud = await user_get(uid) or {}
+        await user_field(uid, "dl", ud.get("dl", 0) + 1)
 
     except Exception as e:
         progress_task.cancel()
-        log.error(f"Instagram Error: {traceback.format_exc()}")
+        log.error(f"Instagram Download Error: {traceback.format_exc()}")
         try: await status.edit_text(tx(lang, "dl_fail"))
         except: pass
 
