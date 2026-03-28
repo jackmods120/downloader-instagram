@@ -6,7 +6,7 @@
 # ║   ░░ ██║██║ ╚███║███████║   ██║   ██║  ██║     ██████╔╝╚██████╔╝   ██║   ░░ ║
 # ║   ░░ ╚═╝╚═╝  ╚══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝     ╚═════╝  ╚═════╝    ╚═╝   ░░ ║
 # ╠══════════════════════════════════════════════════════════════════════════╣
-# ║  Version  : v3.0 (TikTok Style + Stats + Custom Bot Link)                ║
+# ║  Version  : v3.0 (TikTok Style + Stats + MP3 + Photos)                   ║
 # ║  Platform : Instagram Reels & Videos Downloader Bot                      ║
 # ║  Stack    : FastAPI · python-telegram-bot · Firebase · Vercel            ║
 # ╚══════════════════════════════════════════════════════════════════════════╝
@@ -15,7 +15,7 @@ import os, time, logging, httpx, re, html, asyncio, json, traceback
 from datetime import datetime
 from fastapi import FastAPI, Request
 from telegram import (
-    Update, InlineKeyboardButton, InlineKeyboardMarkup,
+    Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
 )
 from telegram.ext import (
     ApplicationBuilder, CommandHandler, ContextTypes,
@@ -56,6 +56,7 @@ CFG: dict = {
     "admin_bypass" : True,
     "total_dl"     : 0,
     "total_users"  : 0,
+    "max_photos"   : 15,
 }
 
 # ==============================================================================
@@ -64,7 +65,7 @@ CFG: dict = {
 L: dict = {
 
 "ku": {
-    "welcome"         : "👋 سڵاو {name} {badge}\n\n📸 بەخێربێیت بۆ بۆتی داگرتنی ئینستاگرام!\n🎬 ڤیدیۆ و ریلز بدابەزێنە بەبێ واتەرمارک.\n\n━━━━━━━━━━━━━━━━━━━\n👇 لینکی ئینستاگرامەکەت بنێرەم:",
+    "welcome"         : "👋 سڵاو {name} {badge}\n\n📸 بەخێربێیت بۆ بۆتی داگرتنی ئینستاگرام!\n🎬 ڤیدیۆ، وێنە و دەنگ بدابەزێنە بەبێ واتەرمارک.\n\n━━━━━━━━━━━━━━━━━━━\n👇 لینکی ئینستاگرامەکەت بنێرەم:",
     "help"            : "📚 ڕێنمایی بەکارهێنان\n\n1️⃣ لینکی ڤیدیۆ یان ریلز لە ئینستاگرام کۆپی بکە.\n2️⃣ لینکەکە لێرە پەیست بکە.\n3️⃣ ڤیدیۆکەت دەگات!\n\n✅ پشتگیریکراوەکان:\n• instagram.com/reel/...\n• instagram.com/p/...\n\n💎 VIP: بێ جۆینی ناچاری، خێرایی زۆرتر.\n📩 پەیوەندی: {dev}",
     "profile"         : "👤 کارتی پرۆفایل\n\n🆔 ئایدی: {id}\n👤 ناو: {name}\n🔗 یوزەرنەیم: @{user}\n📅 تۆماربوون: {date}\n💎 VIP: {vip}\n🌍 زمان: {ulang}\n📥 دابەزاندن: {dl} جار",
     "vip_info"        : "💎 تایبەتمەندییەکانی VIP\n\n✅ بەبێ جۆینی ناچاری.\n✅ خێرایی دابەزاندنی زیاتر.\n\nبۆ کڕینی VIP: {dev}",
@@ -74,12 +75,13 @@ L: dict = {
     "bot_lang_saved"  : "✅ زمانی سەرەکی بۆتەکە گۆڕدرا بۆ: {lang}",
     "force_join"      : "🔒 جۆینی ناچاری\nتکایە سەرەتا ئەم چەناڵانە جۆین بکە، پاشان کلیک لە '✅ جۆینم کرد' بکە:",
     "processing"      : "🔍 دەگەڕێم بۆ لینکەکە...\nچەند چرکەیەک چاوەڕێبە ⏳",
+    "sending_photos"  : "📸 وێنەکان ئامادە دەکرێن...",
     "found"           : "📝 سەردێڕ: {title}\n👤 خاوەن: {owner}\n\n📊 ئامارەکان:\n👁 بینەر: {views}  \n❤️ لایک: {likes}  \n💬 کۆمێنت: {comments}\n\n🎬 <a href=\"https://t.me/Instagram_Downloader_Jack_Robot\">کلیک لێرە بکە — دابەزاندن دەستپێبکە</a>",
     "blocked_msg"     : "⛔ تۆ بلۆک کراویت.",
     "maintenance_msg" : "🛠 چاکسازی کاتی!\n\n⚙️ بۆتەکەمان لە ژێر نوێکردنەوەیەکی گەورەدایە.\n⏳ زووترین کاتێکدا دەگەڕێینەوە!\n\n📩 پەیوەندی: {dev}",
     "invalid_link"    : "❌ لینکەکە هەڵەیە یان ڤیدیۆکە گشتی نییە!",
     "dl_fail"         : "❌ هەڵەیەک ڕوویدا! ناتوانرێت دابەزێنرێت.",
-    "no_video"        : "❌ ڤیدیۆکە نەدۆزرایەوە! ئەم پۆستە ڤیدیۆی تێدا نییە.",
+    "no_video"        : "❌ پۆستەکە نەدۆزرایەوە!",
     "private_post"    : "🔒 ئەم پۆستە تایبەتییە!\nتەنیا پۆستی گشتی دادەگیرێت.",
     "invalid_id"      : "❌ ئایدیەکە دروست نییە! تەنیا ژمارە بنووسە.",
     "user_not_found"  : "⚠️ بەکارهێنەر نەدۆزرایەوە.",
@@ -167,12 +169,13 @@ L: dict = {
     "bot_lang_saved"  : "✅ Bot default language changed to: {lang}",
     "force_join"      : "🔒 Forced Join\nPlease join these channels first, then click '✅ Joined':",
     "processing"      : "🔍 Looking up the link...\nPlease wait ⏳",
+    "sending_photos"  : "📸 Preparing photos...",
     "found"           : "📝 Title: {title}\n👤 Author: {owner}\n\n📊 Stats:\n👁 Views: {views}  \n❤️ Likes: {likes}  \n💬 Comments: {comments}\n\n🎬 <a href=\"https://t.me/Instagram_Downloader_Jack_Robot\">Click Here — Start Downloading</a>",
     "blocked_msg"     : "⛔ You are blocked.",
     "maintenance_msg" : "🛠 Maintenance!\n\n⚙️ The bot is under a major update.\n⏳ We'll be back shortly!\n\n📩 Contact: {dev}",
     "invalid_link"    : "❌ Invalid link or the video is not public!",
     "dl_fail"         : "❌ An error occurred! Could not download.\nPlease try again.",
-    "no_video"        : "❌ Video not found! This post has no video.",
+    "no_video"        : "❌ Post not found!",
     "private_post"    : "🔒 This post is private!\nOnly public posts can be downloaded.",
     "invalid_id"      : "❌ Invalid ID! Numbers only.",
     "user_not_found"  : "⚠️ User not found.",
@@ -260,12 +263,13 @@ L: dict = {
     "bot_lang_saved"  : "✅ تم تغيير اللغة الافتراضية إلى: {lang}",
     "force_join"      : "🔒 الاشتراك الإجباري\nيرجى الانضمام إلى هذه القنوات أولاً، ثم اضغط '✅ انضممت':",
     "processing"      : "🔍 جاري البحث عن الرابط...\nانتظر لحظة ⏳",
+    "sending_photos"  : "📸 جاري تجهيز الصور...",
     "found"           : "📝 العنوان: {title}\n👤 المالك: {owner}\n\n📊 الإحصائيات:\n👁 مشاهدة: {views}  \n❤️ إعجاب: {likes}  \n💬 تعليق: {comments}\n\n🎬 <a href=\"https://t.me/Instagram_Downloader_Jack_Robot\">اضغط هنا — ابدأ التحميل</a>",
     "blocked_msg"     : "⛔ أنت محظور.",
     "maintenance_msg" : "🛠 صيانة!\n\n⚙️ البوت تحت تحديث كبير.\n⏳ سنعود قريباً!\n\n📩 للتواصل: {dev}",
     "invalid_link"    : "❌ الرابط غير صحيح أو الفيديو غير عام!",
     "dl_fail"         : "❌ حدث خطأ! تعذر التنزيل.\nيرجى المحاولة مجدداً.",
-    "no_video"        : "❌ لم يتم العثور على فيديو! هذا المنشور لا يحتوي على فيديو.",
+    "no_video"        : "❌ المنشور غير موجود!",
     "private_post"    : "🔒 هذا المنشور خاص!\nلا يمكن تنزيل سوى المنشورات العامة.",
     "invalid_id"      : "❌ معرف غير صحيح! أرقام فقط.",
     "user_not_found"  : "⚠️ المستخدم غير موجود.",
@@ -433,7 +437,7 @@ async def user_get(uid) -> dict | None:   return await db_get(f"users/{uid}")
 async def user_put(uid, data):            await db_put(f"users/{uid}", data)
 async def user_field(uid, field, val):    await db_put(f"users/{uid}/{field}", val)
 async def user_exists(uid) -> bool:       return (await db_get(f"users/{uid}")) is not None
-async def all_uids() -> list:             return [int(k) for k in (await db_get("users") or {}).keys()]
+async def all_uids() -> list:             return[int(k) for k in (await db_get("users") or {}).keys()]
 
 async def get_user_lang(uid: int) -> str:
     ud = await db_get(f"users/{uid}/lang")
@@ -477,7 +481,7 @@ async def fetch_instagram(url: str) -> dict | None:
 
     async with httpx.AsyncClient(timeout=timeout, headers=headers, follow_redirects=True) as c:
 
-        # Method 2: Instagram GraphQL API (This method returns stats if available)
+        # Method 1: Instagram GraphQL API (Rich Data)
         try:
             import urllib.parse, json as _json
             variables = _json.dumps({"shortcode": post_id, "fetch_comment_count": "null",
@@ -504,19 +508,49 @@ async def fetch_instagram(url: str) -> dict | None:
             if r.status_code == 200:
                 data = r.json()
                 media = data.get("data", {}).get("xdt_shortcode_media", {})
-                if media and media.get("is_video") and media.get("video_url"):
+                if media:
                     dims = media.get("dimensions", {})
                     owner = media.get("owner", {}).get("username", "Instagram User")
                     edge_cap = media.get("edge_media_to_caption", {}).get("edges",[])
                     title = edge_cap[0].get("node", {}).get("text", "Instagram Post") if edge_cap else "Instagram Post"
                     
                     # Extract Stats
-                    views = media.get("video_view_count", 0)
-                    likes = media.get("edge_media_preview_like", {}).get("count", 0)
-                    comments = media.get("edge_media_to_parent_comment", {}).get("count", 0) or media.get("edge_media_preview_comment", {}).get("count", 0)
+                    views = media.get("video_view_count") or media.get("play_count") or 0
+                    likes = media.get("edge_media_preview_like", {}).get("count") or media.get("edge_media_to_like", {}).get("count") or 0
+                    comments = media.get("edge_media_to_comment", {}).get("count") or media.get("edge_media_to_parent_comment", {}).get("count") or media.get("edge_media_preview_comment", {}).get("count") or 0
+
+                    # Extract Audio
+                    audio_url = None
+                    clips = media.get("clips_metadata") or {}
+                    orig_sound = clips.get("original_sound_info") or {}
+                    if orig_sound.get("progressive_download_url"):
+                        audio_url = orig_sound.get("progressive_download_url")
+                    if not audio_url:
+                        asset_info = (clips.get("music_info") or {}).get("music_asset_info") or {}
+                        if asset_info.get("progressive_download_url"):
+                            audio_url = asset_info.get("progressive_download_url")
+
+                    # Extract Video or Carousel Images
+                    video_url = media.get("video_url")
+                    images =[]
+                    
+                    if media.get("edge_sidecar_to_children"):
+                        edges = media["edge_sidecar_to_children"].get("edges",[])
+                        for edge in edges:
+                            node = edge.get("node", {})
+                            if node.get("is_video"):
+                                if not video_url: video_url = node.get("video_url")
+                            else:
+                                img_url = node.get("display_url")
+                                if img_url: images.append(img_url)
+                    elif not media.get("is_video"):
+                        img_url = media.get("display_url")
+                        if img_url: images.append(img_url)
 
                     return {
-                        "video_url": media["video_url"],
+                        "video_url": video_url,
+                        "images": images,
+                        "audio_url": audio_url,
                         "width":  str(dims.get("width", "?")),
                         "height": str(dims.get("height", "?")),
                         "title": clean_title(title),
@@ -527,41 +561,7 @@ async def fetch_instagram(url: str) -> dict | None:
                     }
         except: pass
 
-        # Method 1: og:video meta tag scraping (Fallback if GraphQL fails, stats might be 0)
-        try:
-            r = await c.get(f"https://www.instagram.com/p/{post_id}/", headers={
-                "User-Agent": "facebookexternalhit/1.1",
-                "Accept-Language": "en-US,en;q=0.9",
-            })
-            if r.status_code == 200:
-                video_match = re.search(r'<meta property="og:video" content="([^"]+)"', r.text)
-                if video_match:
-                    video_url = html.unescape(video_match.group(1))
-                    
-                    # Extract Owner and Title
-                    t_match = re.search(r'<meta property="og:title" content="([^"]+)"', r.text)
-                    owner = "Instagram User"
-                    title = "Instagram Post"
-                    if t_match:
-                        raw_title = html.unescape(t_match.group(1))
-                        if " on Instagram: " in raw_title:
-                            owner, title = raw_title.split(" on Instagram: ", 1)
-                            title = title.strip('" \n')
-                        else:
-                            title = raw_title
-
-                    return {
-                        "video_url": video_url,
-                        "width": "?", "height": "?",
-                        "title": clean_title(title),
-                        "owner": owner,
-                        "views": "?",
-                        "likes": "?",
-                        "comments": "?"
-                    }
-        except: pass
-
-        # Method 3: Third-party API fallback
+        # Method 2: Third-party API fallback
         try:
             r = await c.get(f"https://api.instadownloader.org/v1?url=https://www.instagram.com/p/{post_id}/")
             if r.status_code == 200:
@@ -569,6 +569,8 @@ async def fetch_instagram(url: str) -> dict | None:
                 if d.get("video"):
                     return {
                         "video_url": d["video"], 
+                        "images":[],
+                        "audio_url": None,
                         "width": "?", "height": "?",
                         "title": "Instagram Post",
                         "owner": "Instagram",
@@ -1075,27 +1077,60 @@ async def on_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         if not data:
             await status.edit_text(tx(lang, "invalid_link")); return
 
-        video_url = data.get("video_url")
-        if not video_url:
-            await status.edit_text(tx(lang, "no_video")); return
-
-        try: await status.delete()
-        except: pass
-
         # Format Caption TikTok Style with Stats
         caption = tx(lang, "found", 
             title=html.escape(data.get("title", "Instagram Post")), 
             owner=html.escape(data.get("owner", "Instagram User")),
-            views=fmt(data.get("views", "?")),
-            likes=fmt(data.get("likes", "?")),
-            comments=fmt(data.get("comments", "?"))
+            views=fmt(data.get("views", 0)),
+            likes=fmt(data.get("likes", 0)),
+            comments=fmt(data.get("comments", 0))
         )
 
-        try:
-            await ctx.bot.send_video(uid, video_url, caption=caption, parse_mode="HTML")
-        except Exception:
-            await ctx.bot.send_message(uid, f"{caption}\n\n📥 <a href='{video_url}'>لینکی ڕاستەوخۆ بۆ دابەزاندن</a>", parse_mode="HTML")
+        try: await status.delete()
+        except: pass
 
+        photo_post = len(data.get("images",[])) > 0
+        video_url = data.get("video_url")
+
+        # 1. Send Photos or Video
+        if photo_post:
+            imgs = data["images"]
+            w = await ctx.bot.send_message(uid, tx(lang, "sending_photos"))
+            for i in range(0, min(len(imgs), int(CFG.get("max_photos", 15))), 10):
+                chunk = imgs[i:i+10]
+                media =[InputMediaPhoto(u) for u in chunk]
+                if i == 0: media[0].caption = caption; media[0].parse_mode = "HTML"
+                try: await ctx.bot.send_media_group(uid, media)
+                except:
+                    for u in chunk:
+                        try: await ctx.bot.send_photo(uid, u)
+                        except: pass
+                await asyncio.sleep(1)
+            try: await w.delete()
+            except: pass
+        else:
+            if video_url:
+                try:
+                    await ctx.bot.send_video(uid, video_url, caption=caption, parse_mode="HTML")
+                except Exception:
+                    await ctx.bot.send_message(uid, f"{caption}\n\n📥 <a href='{video_url}'>لینکی ڕاستەوخۆ بۆ دابەزاندن</a>", parse_mode="HTML")
+            else:
+                await ctx.bot.send_message(uid, caption, parse_mode="HTML")
+
+        # 2. Send MP3 Audio Separately (if available)
+        audio_url = data.get("audio_url")
+        if audio_url:
+            try:
+                await ctx.bot.send_audio(
+                    uid, 
+                    audio_url, 
+                    title=html.escape(data.get("title", "Instagram Audio")[:30]), 
+                    performer=html.escape(data.get("owner", "Instagram"))
+                )
+            except Exception as e:
+                log.warning(f"Audio send failed: {e}")
+
+        # Update stats
         CFG["total_dl"] = CFG.get("total_dl", 0) + 1
         await save_cfg()
         ud = await user_get(uid) or {}
