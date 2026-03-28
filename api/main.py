@@ -6,7 +6,7 @@
 # ║   ░░ ██║██║ ╚███║███████║   ██║   ██║  ██║     ██████╔╝╚██████╔╝   ██║   ░░ ║
 # ║   ░░ ╚═╝╚═╝  ╚══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝     ╚═════╝  ╚═════╝    ╚═╝   ░░ ║
 # ╠══════════════════════════════════════════════════════════════════════════╣
-# ║  Version  : v2.0 (TikTok Style)                                          ║
+# ║  Version  : v3.0 (TikTok Style + Stats + Custom Bot Link)                ║
 # ║  Platform : Instagram Reels & Videos Downloader Bot                      ║
 # ║  Stack    : FastAPI · python-telegram-bot · Firebase · Vercel            ║
 # ╚══════════════════════════════════════════════════════════════════════════╝
@@ -74,7 +74,7 @@ L: dict = {
     "bot_lang_saved"  : "✅ زمانی سەرەکی بۆتەکە گۆڕدرا بۆ: {lang}",
     "force_join"      : "🔒 جۆینی ناچاری\nتکایە سەرەتا ئەم چەناڵانە جۆین بکە، پاشان کلیک لە '✅ جۆینم کرد' بکە:",
     "processing"      : "🔍 دەگەڕێم بۆ لینکەکە...\nچەند چرکەیەک چاوەڕێبە ⏳",
-    "found"           : "📝 سەردێڕ: {title}\n👤 خاوەن: {owner}\n\n📐 ڕوونی ڤیدیۆ: {width}x{height}\n\n🎬 <a href=\"{vid_url}\">کلیک لێرە بکە — دابەزاندن دەستپێبکە</a>",
+    "found"           : "📝 سەردێڕ: {title}\n👤 خاوەن: {owner}\n\n📊 ئامارەکان:\n👁 بینەر: {views}  \n❤️ لایک: {likes}  \n💬 کۆمێنت: {comments}\n\n🎬 <a href=\"https://t.me/Instagram_Downloader_Jack_Robot\">کلیک لێرە بکە — دابەزاندن دەستپێبکە</a>",
     "blocked_msg"     : "⛔ تۆ بلۆک کراویت.",
     "maintenance_msg" : "🛠 چاکسازی کاتی!\n\n⚙️ بۆتەکەمان لە ژێر نوێکردنەوەیەکی گەورەدایە.\n⏳ زووترین کاتێکدا دەگەڕێینەوە!\n\n📩 پەیوەندی: {dev}",
     "invalid_link"    : "❌ لینکەکە هەڵەیە یان ڤیدیۆکە گشتی نییە!",
@@ -167,7 +167,7 @@ L: dict = {
     "bot_lang_saved"  : "✅ Bot default language changed to: {lang}",
     "force_join"      : "🔒 Forced Join\nPlease join these channels first, then click '✅ Joined':",
     "processing"      : "🔍 Looking up the link...\nPlease wait ⏳",
-    "found"           : "📝 Title: {title}\n👤 Author: {owner}\n\n📐 Resolution: {width}x{height}\n\n🎬 <a href=\"{vid_url}\">Click Here — Start Downloading</a>",
+    "found"           : "📝 Title: {title}\n👤 Author: {owner}\n\n📊 Stats:\n👁 Views: {views}  \n❤️ Likes: {likes}  \n💬 Comments: {comments}\n\n🎬 <a href=\"https://t.me/Instagram_Downloader_Jack_Robot\">Click Here — Start Downloading</a>",
     "blocked_msg"     : "⛔ You are blocked.",
     "maintenance_msg" : "🛠 Maintenance!\n\n⚙️ The bot is under a major update.\n⏳ We'll be back shortly!\n\n📩 Contact: {dev}",
     "invalid_link"    : "❌ Invalid link or the video is not public!",
@@ -260,7 +260,7 @@ L: dict = {
     "bot_lang_saved"  : "✅ تم تغيير اللغة الافتراضية إلى: {lang}",
     "force_join"      : "🔒 الاشتراك الإجباري\nيرجى الانضمام إلى هذه القنوات أولاً، ثم اضغط '✅ انضممت':",
     "processing"      : "🔍 جاري البحث عن الرابط...\nانتظر لحظة ⏳",
-    "found"           : "📝 العنوان: {title}\n👤 المالك: {owner}\n\n📐 الدقة: {width}x{height}\n\n🎬 <a href=\"{vid_url}\">اضغط هنا — ابدأ التحميل</a>",
+    "found"           : "📝 العنوان: {title}\n👤 المالك: {owner}\n\n📊 الإحصائيات:\n👁 مشاهدة: {views}  \n❤️ إعجاب: {likes}  \n💬 تعليق: {comments}\n\n🎬 <a href=\"https://t.me/Instagram_Downloader_Jack_Robot\">اضغط هنا — ابدأ التحميل</a>",
     "blocked_msg"     : "⛔ أنت محظور.",
     "maintenance_msg" : "🛠 صيانة!\n\n⚙️ البوت تحت تحديث كبير.\n⏳ سنعود قريباً!\n\n📩 للتواصل: {dev}",
     "invalid_link"    : "❌ الرابط غير صحيح أو الفيديو غير عام!",
@@ -445,7 +445,7 @@ async def get_user_display(uid: int) -> str:
     if ud:
         name = ud.get("name", str(uid))
         username = ud.get("user", "")
-        return f"{name} (@{username}) [{uid}]" if username else f"{name} [{uid}]"
+        return f"{name} (@{username}) [{uid}]" if username else f"{name}[{uid}]"
     return str(uid)
 
 async def check_join(uid, ctx) -> tuple[bool, list]:
@@ -477,41 +477,7 @@ async def fetch_instagram(url: str) -> dict | None:
 
     async with httpx.AsyncClient(timeout=timeout, headers=headers, follow_redirects=True) as c:
 
-        # Method 1: og:video meta tag scraping with title & owner
-        try:
-            r = await c.get(f"https://www.instagram.com/p/{post_id}/", headers={
-                "User-Agent": "facebookexternalhit/1.1",
-                "Accept-Language": "en-US,en;q=0.9",
-            })
-            if r.status_code == 200:
-                video_match = re.search(r'<meta property="og:video" content="([^"]+)"', r.text)
-                if video_match:
-                    video_url = html.unescape(video_match.group(1))
-                    w = re.search(r'<meta property="og:video:width" content="([^"]+)"', r.text)
-                    h = re.search(r'<meta property="og:video:height" content="([^"]+)"', r.text)
-                    
-                    # Extract Owner and Title
-                    t_match = re.search(r'<meta property="og:title" content="([^"]+)"', r.text)
-                    owner = "Instagram User"
-                    title = "Instagram Post"
-                    if t_match:
-                        raw_title = html.unescape(t_match.group(1))
-                        if " on Instagram: " in raw_title:
-                            owner, title = raw_title.split(" on Instagram: ", 1)
-                            title = title.strip('" \n')
-                        else:
-                            title = raw_title
-
-                    return {
-                        "video_url": video_url,
-                        "width":  w.group(1) if w else "?",
-                        "height": h.group(1) if h else "?",
-                        "title": clean_title(title),
-                        "owner": owner
-                    }
-        except: pass
-
-        # Method 2: Instagram GraphQL API
+        # Method 2: Instagram GraphQL API (This method returns stats if available)
         try:
             import urllib.parse, json as _json
             variables = _json.dumps({"shortcode": post_id, "fetch_comment_count": "null",
@@ -541,15 +507,57 @@ async def fetch_instagram(url: str) -> dict | None:
                 if media and media.get("is_video") and media.get("video_url"):
                     dims = media.get("dimensions", {})
                     owner = media.get("owner", {}).get("username", "Instagram User")
-                    edge_cap = media.get("edge_media_to_caption", {}).get("edges", [])
+                    edge_cap = media.get("edge_media_to_caption", {}).get("edges",[])
                     title = edge_cap[0].get("node", {}).get("text", "Instagram Post") if edge_cap else "Instagram Post"
+                    
+                    # Extract Stats
+                    views = media.get("video_view_count", 0)
+                    likes = media.get("edge_media_preview_like", {}).get("count", 0)
+                    comments = media.get("edge_media_to_parent_comment", {}).get("count", 0) or media.get("edge_media_preview_comment", {}).get("count", 0)
 
                     return {
                         "video_url": media["video_url"],
                         "width":  str(dims.get("width", "?")),
                         "height": str(dims.get("height", "?")),
                         "title": clean_title(title),
-                        "owner": owner
+                        "owner": owner,
+                        "views": views,
+                        "likes": likes,
+                        "comments": comments
+                    }
+        except: pass
+
+        # Method 1: og:video meta tag scraping (Fallback if GraphQL fails, stats might be 0)
+        try:
+            r = await c.get(f"https://www.instagram.com/p/{post_id}/", headers={
+                "User-Agent": "facebookexternalhit/1.1",
+                "Accept-Language": "en-US,en;q=0.9",
+            })
+            if r.status_code == 200:
+                video_match = re.search(r'<meta property="og:video" content="([^"]+)"', r.text)
+                if video_match:
+                    video_url = html.unescape(video_match.group(1))
+                    
+                    # Extract Owner and Title
+                    t_match = re.search(r'<meta property="og:title" content="([^"]+)"', r.text)
+                    owner = "Instagram User"
+                    title = "Instagram Post"
+                    if t_match:
+                        raw_title = html.unescape(t_match.group(1))
+                        if " on Instagram: " in raw_title:
+                            owner, title = raw_title.split(" on Instagram: ", 1)
+                            title = title.strip('" \n')
+                        else:
+                            title = raw_title
+
+                    return {
+                        "video_url": video_url,
+                        "width": "?", "height": "?",
+                        "title": clean_title(title),
+                        "owner": owner,
+                        "views": "?",
+                        "likes": "?",
+                        "comments": "?"
                     }
         except: pass
 
@@ -563,7 +571,8 @@ async def fetch_instagram(url: str) -> dict | None:
                         "video_url": d["video"], 
                         "width": "?", "height": "?",
                         "title": "Instagram Post",
-                        "owner": "Instagram"
+                        "owner": "Instagram",
+                        "views": "?", "likes": "?", "comments": "?"
                     }
         except: pass
 
@@ -587,8 +596,7 @@ async def render_main_menu(uid: int, lang: str, name: str) -> tuple[str, InlineK
     )
     kb = [[InlineKeyboardButton(tx(lang, "b_dl"), callback_data="ask_link")],[InlineKeyboardButton(tx(lang, "b_profile"), callback_data="show_profile"),
          InlineKeyboardButton(tx(lang, "b_vip"),     callback_data="show_vip")],[InlineKeyboardButton(tx(lang, "b_settings"), callback_data="show_settings"),
-         InlineKeyboardButton(tx(lang, "b_help"),     callback_data="show_help")],
-        [InlineKeyboardButton(tx(lang, "b_channel"), url=CHANNEL_URL)],
+         InlineKeyboardButton(tx(lang, "b_help"),     callback_data="show_help")],[InlineKeyboardButton(tx(lang, "b_channel"), url=CHANNEL_URL)],
     ]
     if is_admin(uid):
         kb.append([InlineKeyboardButton(tx(lang, "b_panel"), callback_data="panel_unified")])
@@ -791,8 +799,7 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
                  InlineKeyboardButton(tx(lang, "b_adm_info"),      callback_data="adm_info")],
             ]
         if is_super(uid):
-            kb += [
-                [InlineKeyboardButton(tx(lang, "sup_panel_title")[:20], callback_data="sup_panel")],
+            kb += [[InlineKeyboardButton(tx(lang, "sup_panel_title")[:20], callback_data="sup_panel")],
             ]
         kb += back(lang)
         try: await q.edit_message_text(text, parse_mode="HTML", reply_markup=InlineKeyboardMarkup(kb))
@@ -906,7 +913,7 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
     if data == "sup_list_admins":
         if not is_super(uid): return
-        adm_list = [str(a) for a in admins_set if not is_super(a)]
+        adm_list =[str(a) for a in admins_set if not is_super(a)]
         text = tx(lang, "sup_admins_title", count=len(adm_list)) + "\n" + "\n".join(adm_list) if adm_list else tx(lang, "sup_admins_title", count=0) + "\n—"
         kb = [[InlineKeyboardButton(tx(lang, "b_add"),    callback_data="sup_add_admin"),
              InlineKeyboardButton(tx(lang, "b_remove"), callback_data="sup_rm_admin")],
@@ -1075,19 +1082,19 @@ async def on_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         try: await status.delete()
         except: pass
 
-        # Format Caption TikTok Style
+        # Format Caption TikTok Style with Stats
         caption = tx(lang, "found", 
             title=html.escape(data.get("title", "Instagram Post")), 
             owner=html.escape(data.get("owner", "Instagram User")),
-            width=data.get("width", "?"), 
-            height=data.get("height", "?"),
-            vid_url=video_url
+            views=fmt(data.get("views", "?")),
+            likes=fmt(data.get("likes", "?")),
+            comments=fmt(data.get("comments", "?"))
         )
 
         try:
             await ctx.bot.send_video(uid, video_url, caption=caption, parse_mode="HTML")
         except Exception:
-            await ctx.bot.send_message(uid, caption, parse_mode="HTML")
+            await ctx.bot.send_message(uid, f"{caption}\n\n📥 <a href='{video_url}'>لینکی ڕاستەوخۆ بۆ دابەزاندن</a>", parse_mode="HTML")
 
         CFG["total_dl"] = CFG.get("total_dl", 0) + 1
         await save_cfg()
