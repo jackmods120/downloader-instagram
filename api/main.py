@@ -6,7 +6,7 @@
 # ║   ░░ ██║██║ ╚███║███████║   ██║   ██║  ██║     ██████╔╝╚██████╔╝   ██║   ░░ ║
 # ║   ░░ ╚═╝╚═╝  ╚══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝     ╚═════╝  ╚═════╝    ╚═╝   ░░ ║
 # ╠══════════════════════════════════════════════════════════════════════════╣
-# ║  Version  : v1.0                                                         ║
+# ║  Version  : v2.0                                                         ║
 # ║  Platform : Instagram Reels & Videos Downloader Bot                     ║
 # ║  Stack    : FastAPI · python-telegram-bot · Firebase · Vercel           ║
 # ╚══════════════════════════════════════════════════════════════════════════╝
@@ -66,206 +66,344 @@ L: dict = {
 
 # ─────────────────────────────────── KURDISH ──────────────────────────────────
 "ku": {
-    "welcome"         : "👋 سڵاو {name} {badge}\n\n📸 بەخێربێیت بۆ بۆتی داگرتنی ئینستاگرام!\n🎬 ڤیدیۆ و ریلز بدابەزێنە بەبێ واتەرمارک.\n\n━━━━━━━━━━━━━━━━━━━\n👇 لینکی ئینستاگرامەکەت بنێرەم:",
-    "help"            : "📚 ڕێنمایی بەکارهێنان\n\n1️⃣ لینکی ڤیدیۆ یان ریلز لە ئینستاگرام کۆپی بکە.\n2️⃣ لینکەکە لێرە پەیست بکە.\n3️⃣ ڤیدیۆکەت دەگات!\n\n✅ پشتگیریکراوەکان:\n• instagram.com/reel/...\n• instagram.com/p/...\n\n💎 VIP: بێ جۆینی ناچاری، خێرایی زۆرتر.\n📩 پەیوەندی: {dev}",
-    "profile"         : "👤 کارتی پرۆفایل\n\n🆔 ئایدی: {id}\n👤 ناو: {name}\n🔗 یوزەرنەیم: @{user}\n📅 تۆماربوون: {date}\n💎 VIP: {vip}\n🌍 زمان: {ulang}\n📥 دابەزاندن: {dl} جار",
-    "vip_info"        : "💎 تایبەتمەندییەکانی VIP\n\n✅ بەبێ جۆینی ناچاری.\n✅ خێرایی دابەزاندنی زیاتر.\n\nبۆ کڕینی VIP: {dev}",
-    "lang_title"      : "🌍 زمانی خۆت هەڵبژێرە:",
-    "lang_saved"      : "✅ زمانەکە گۆڕدرا!",
-    "bot_lang_title"  : "🌍 زمانی سەرەکی بۆتەکە هەڵبژێرە:",
-    "bot_lang_saved"  : "✅ زمانی سەرەکی بۆتەکە گۆڕدرا بۆ: {lang}",
-    "force_join"      : "🔒 جۆینی ناچاری\nتکایە سەرەتا ئەم چەناڵانە جۆین بکە، پاشان کلیک لە '✅ جۆینم کرد' بکە:",
-    "processing"      : "🔍 دەگەڕێم بۆ لینکەکە...\nچەند چرکەیەک چاوەڕێبە ⏳",
-    "found"           : "✅ <b>ڤیدیۆکەت ئامادەیە!</b>\n\n📐 بەرز: {width}x{height}\n\n<i>دابەزاندرا بە بۆتی ئینستاگرام 📥</i>",
-    "blocked_msg"     : "⛔ تۆ بلۆک کراویت.",
-    "maintenance_msg" : "🛠 چاکسازی کاتی!\n\n⚙️ بۆتەکەمان لە ژێر نوێکردنەوەیەکی گەورەدایە.\n⏳ زووترین کاتێکدا دەگەڕێینەوە!\n\n📩 پەیوەندی: {dev}",
-    "invalid_link"    : "❌ لینکەکە هەڵەیە یان ڤیدیۆکە گشتی نییە!\n\nدڵنیابە لینکەکە:\n• instagram.com/reel/...\n• instagram.com/p/...",
-    "dl_fail"         : "❌ هەڵەیەک ڕوویدا! ناتوانرێت دابەزێنرێت.\nتکایە دووبارە هەوڵبدەرەوە.",
-    "no_video"        : "❌ ڤیدیۆکە نەدۆزرایەوە! ئەم پۆستە ڤیدیۆی تێدا نییە.",
-    "private_post"    : "🔒 ئەم پۆستە تایبەتییە!\nتەنیا پۆستی گشتی دادەگیرێت.",
-    "invalid_id"      : "❌ ئایدیەکە دروست نییە! تەنیا ژمارە بنووسە.",
-    "user_not_found"  : "⚠️ بەکارهێنەر نەدۆزرایەوە.",
-    "broadcast_done"  : "📢 برۆدکاست تەواو بوو\n✅ گەیشت بە: {ok}\n❌ نەگەیشت: {fail}",
-    "broadcast_sending": "📢 ئەرسال دەکرێت... ({done}/{total})",
-    "welcome_set"     : "✅ نامەی بەخێرهاتن گۆڕدرا.",
-    "write_welcome"   : "✍️ نامەی بەخێرهاتن بنووسە:\n(دەتوانیت {name} و {badge} بەکاربێنیت)",
-    "write_id"        : "✍️ ئایدی کەسەکە بنووسە:",
-    "write_ch"        : "✍️ یوزەرنەیمی چەناڵ بنووسە (نمونە: @mychannel):",
-    "vip_yes"         : "بەڵێ 💎",
-    "vip_no"          : "نەخێر",
-    "badge_owner"     : "👑",
-    "badge_super"     : "🌌",
-    "badge_admin"     : "🛡",
-    "badge_vip"       : "💎",
-    "new_user_notify" : "👤 بەکارهێنەری نوێ!\n\n👤 ناو: {name}\n🔗 یوزەرنەیم: {uname}\n🆔 ئایدی: <code>{uid}</code>\n🌍 زمانی ئەپ: {app_lang}\n📅 کات: {date}",
-    "b_notify_block"  : "🚫 بلۆک",
-    "b_notify_vip"    : "💎 VIP بکە",
-    "b_notify_admin"  : "🛡 ئەدمین بکە",
-    "b_notify_info"   : "👤 زانیاری",
-    "act_blocked"     : "✅ بلۆک کرا: {id}",
-    "act_unblocked"   : "✅ بلۆک لادرا: {id}",
-    "act_vip_added"   : "✅ VIP کرا: {id}",
-    "act_vip_removed" : "✅ VIP لادرا: {id}",
-    "act_adm_added"   : "✅ ئەدمین کرا: {id}",
-    "act_sup_added"   : "✅ سوپەر ئەدمین کرا: {id}",
-    "act_ch_wrong_fmt": "❌ فۆرماتی چەناڵ هەڵەیە! نمونە: @mychannel",
-    "sup_ch_added"    : "✅ چەناڵ زیادکرا: {ch}",
-    "userinfo_text"   : "👤 زانیاری بەکارهێنەر\n\n👤 ناو: {name}\n🔗 یوزەرنەیم: @{user}\n🆔 ئایدی: {id}\n💎 VIP: {vip}\n🌍 زمان: {lang}\n📥 دابەزاندن: {dl} جار\n📅 تۆماربوون: {date}",
-    "b_dl"            : "📥 دابەزاندنی نوێ",
-    "b_profile"       : "👤 پرۆفایلی من",
-    "b_vip"           : "💎 بەشی VIP",
-    "b_settings"      : "⚙️ ڕێکخستن و زمان",
-    "b_help"          : "ℹ️ فێرکاری",
-    "b_channel"       : "📢 کەناڵی بۆت",
-    "b_panel"         : "⚙️ پانێڵی کۆنتڕۆڵ",
-    "b_back"          : "🔙 گەڕانەوە",
-    "b_ku"            : "🔴🔆🟢 کوردی",
-    "b_en"            : "🇺🇸 English",
-    "b_ar"            : "🇸🇦 العربية",
-    "b_cancel"        : "❌ هەڵوەشاندنەوە",
-    "b_joined"        : "✅ جۆینم کرد",
-    "b_confirm_remove" : "✅ بەڵێ، بیسڕەوە",
-    "b_cancel_remove"  : "❌ نەخێر، هەڵوەشانەوە",
+    "welcome"              : "👋 سڵاو {name} {badge}\n\n📸 بەخێربێیت بۆ بۆتی داگرتنی ئینستاگرام!\n🎬 ڤیدیۆ و ریلز بدابەزێنە بەبێ واتەرمارک.\n\n━━━━━━━━━━━━━━━━━━━\n👇 لینکی ئینستاگرامەکەت بنێرەم:",
+    "help"                 : "📚 ڕێنمایی بەکارهێنان\n\n1️⃣ لینکی ڤیدیۆ یان ریلز لە ئینستاگرام کۆپی بکە.\n2️⃣ لینکەکە لێرە پەیست بکە.\n3️⃣ ڤیدیۆکەت دەگات!\n\n✅ پشتگیریکراوەکان:\n• instagram.com/reel/...\n• instagram.com/p/...\n\n💎 VIP: بێ جۆینی ناچاری، خێرایی زۆرتر.\n📩 پەیوەندی: {dev}",
+    "profile"              : "👤 کارتی پرۆفایل\n\n🆔 ئایدی: {id}\n👤 ناو: {name}\n🔗 یوزەرنەیم: @{user}\n📅 تۆماربوون: {date}\n💎 VIP: {vip}\n🌍 زمان: {ulang}\n📥 دابەزاندن: {dl} جار",
+    "vip_info"             : "💎 تایبەتمەندییەکانی VIP\n\n✅ بەبێ جۆینی ناچاری.\n✅ خێرایی دابەزاندنی زیاتر.\n\nبۆ کڕینی VIP: {dev}",
+    "lang_title"           : "🌍 زمانی خۆت هەڵبژێرە:",
+    "lang_saved"           : "✅ زمانەکە گۆڕدرا!",
+    "bot_lang_title"       : "🌍 زمانی سەرەکی بۆتەکە هەڵبژێرە:",
+    "bot_lang_saved"       : "✅ زمانی سەرەکی بۆتەکە گۆڕدرا بۆ: {lang}",
+    "bot_lang_current"     : "زمانی ئێستا: {cur}",
+    "force_join"           : "🔒 جۆینی ناچاری\nتکایە سەرەتا ئەم چەناڵانە جۆین بکە، پاشان کلیک لە '✅ جۆینم کرد' بکە:",
+    "processing"           : "🔍 دەگەڕێم بۆ لینکەکە...\nچەند چرکەیەک چاوەڕێبە ⏳",
+    "found"                : "✅ <b>ڤیدیۆکەت ئامادەیە!</b>\n\n📐 بەرز: {width}x{height}\n\n<i>دابەزاندرا بە بۆتی ئینستاگرام 📥</i>",
+    "blocked_msg"          : "⛔ تۆ بلۆک کراویت.",
+    "maintenance_msg"      : "🛠 چاکسازی کاتی!\n\n⚙️ بۆتەکەمان لە ژێر نوێکردنەوەیەکی گەورەدایە.\n⏳ زووترین کاتێکدا دەگەڕێینەوە!\n\n📩 پەیوەندی: {dev}",
+    "invalid_link"         : "❌ لینکەکە هەڵەیە یان ڤیدیۆکە گشتی نییە!\n\nدڵنیابە لینکەکە:\n• instagram.com/reel/...\n• instagram.com/p/...",
+    "dl_fail"              : "❌ هەڵەیەک ڕوویدا! ناتوانرێت دابەزێنرێت.\nتکایە دووبارە هەوڵبدەرەوە.",
+    "no_video"             : "❌ ڤیدیۆکە نەدۆزرایەوە! ئەم پۆستە ڤیدیۆی تێدا نییە.",
+    "private_post"         : "🔒 ئەم پۆستە تایبەتییە!\nتەنیا پۆستی گشتی دادەگیرێت.",
+    "invalid_id"           : "❌ ئایدیەکە دروست نییە! تەنیا ژمارە بنووسە.",
+    "user_not_found"       : "⚠️ بەکارهێنەر نەدۆزرایەوە.",
+    "broadcast_done"       : "📢 برۆدکاست تەواو بوو\n✅ گەیشت بە: {ok}\n❌ نەگەیشت: {fail}",
+    "broadcast_sending"    : "📢 ئەرسال دەکرێت... ({done}/{total})",
+    "broadcast_progress"   : "📢 بەردەوامە... ({done}/{total})",
+    "welcome_set"          : "✅ نامەی بەخێرهاتن گۆڕدرا.",
+    "write_welcome"        : "✍️ نامەی بەخێرهاتن بنووسە:\n(دەتوانیت {name} و {badge} بەکاربێنیت)",
+    "write_id"             : "✍️ ئایدی کەسەکە بنووسە:",
+    "write_ch"             : "✍️ یوزەرنەیمی چەناڵ بنووسە (نمونە: @mychannel):",
+    "vip_yes"              : "بەڵێ 💎",
+    "vip_no"               : "نەخێر",
+    "badge_owner"          : "👑",
+    "badge_super"          : "🌌",
+    "badge_admin"          : "🛡",
+    "badge_vip"            : "💎",
+    "new_user_notify"      : "👤 بەکارهێنەری نوێ!\n\n👤 ناو: {name}\n🔗 یوزەرنەیم: {uname}\n🆔 ئایدی: <code>{uid}</code>\n🌍 زمانی ئەپ: {app_lang}\n📅 کات: {date}",
+    "b_notify_block"       : "🚫 بلۆک",
+    "b_notify_vip"         : "💎 VIP بکە",
+    "b_notify_admin"       : "🛡 ئەدمین بکە",
+    "b_notify_info"        : "👤 زانیاری",
+    "act_blocked"          : "✅ بلۆک کرا: {id}",
+    "act_unblocked"        : "✅ بلۆک لادرا: {id}",
+    "act_vip_added"        : "✅ VIP کرا: {id}",
+    "act_vip_removed"      : "✅ VIP لادرا: {id}",
+    "act_adm_added"        : "✅ ئەدمین کرا: {id}",
+    "act_adm_removed"      : "✅ ئەدمین لادرا: {id}",
+    "act_sup_added"        : "✅ سوپەر ئەدمین کرا: {id}",
+    "act_sup_removed"      : "✅ سوپەر ئەدمین لادرا: {id}",
+    "act_ch_wrong_fmt"     : "❌ فۆرماتی چەناڵ هەڵەیە! نمونە: @mychannel",
+    "sup_ch_added"         : "✅ چەناڵ زیادکرا: {ch}",
+    "userinfo_text"        : "👤 زانیاری بەکارهێنەر\n\n👤 ناو: {name}\n🔗 یوزەرنەیم: @{user}\n🆔 ئایدی: {id}\n💎 VIP: {vip}\n🌍 زمان: {lang}\n📥 دابەزاندن: {dl} جار\n📅 تۆماربوون: {date}",
+    "b_dl"                 : "📥 دابەزاندنی نوێ",
+    "b_profile"            : "👤 پرۆفایلی من",
+    "b_vip"                : "💎 بەشی VIP",
+    "b_settings"           : "⚙️ ڕێکخستن و زمان",
+    "b_help"               : "ℹ️ فێرکاری",
+    "b_channel"            : "📢 کەناڵی بۆت",
+    "b_panel"              : "⚙️ پانێڵی کۆنتڕۆڵ",
+    "b_back"               : "🔙 گەڕانەوە",
+    "b_ku"                 : "🔴🔆🟢 کوردی",
+    "b_en"                 : "🇺🇸 English",
+    "b_ar"                 : "🇸🇦 العربية",
+    "b_cancel"             : "❌ هەڵوەشاندنەوە",
+    "b_joined"             : "✅ جۆینم کرد",
+    "b_confirm_remove"     : "✅ بەڵێ، بیسڕەوە",
+    "b_cancel_remove"      : "❌ نەخێر، هەڵوەشانەوە",
+    "b_add"                : "➕ زیادکردن",
+    "b_remove"             : "➖ سڕینەوە",
+    "b_add_vip"            : "➕ VIP زیادکە",
+    "b_rm_vip"             : "➖ VIP لابە",
+    "b_refresh"            : "🔄 نوێکردنەوە",
+    "b_clear"              : "🗑 سڕینەوە",
     "confirm_remove_admin" : "⚠️ دڵنیایت دەتەوێت ئەم ئەدمینە بسڕیتەوە؟\n🆔 {id}",
     "confirm_remove_super" : "⚠️ دڵنیایت دەتەوێت ئەم سوپەر ئەدمینە بسڕیتەوە؟\n🆔 {id}",
     "confirm_remove_ch"    : "⚠️ دڵنیایت دەتەوێت ئەم چەناڵە بسڕیتەوە؟\n{ch}",
-    "unified_panel_title" : "⚙️ پانێڵی کۆنتڕۆڵ\n\n👥 بەکارهێنەران: {users}\n💎 VIP: {vip}\n🚫 بلۆككراو: {blocked}\n📥 داونلۆد: {dl}\n⏱ Uptime: {uptime}",
+    "unified_panel_title"  : "⚙️ پانێڵی کۆنتڕۆڵ\n\n👥 بەکارهێنەران: {users}\n💎 VIP: {vip}\n🚫 بلۆككراو: {blocked}\n📥 داونلۆد: {dl}\n⏱ Uptime: {uptime}",
+    # ── پانێڵ - بەشی ئەدمین ──
+    "b_adm_stats"          : "📊 ئامار",
+    "b_adm_broadcast"      : "📢 برۆدکاست",
+    "b_adm_block"          : "🚫 بلۆک / بەکارهێنەر",
+    "b_adm_info"           : "👤 زانیاری بەکارهێنەر",
+    "b_adm_admins"         : "🛡 بەڕێوەبردنی ئەدمینەکان",
+    "adm_stats_title"      : "📊 ئامارەکان\n\n👥 بەکارهێنەران: {users}\n💎 VIP: {vip}\n🚫 بلۆككراو: {blocked}\n📥 داونلۆد: {dl}\n⏱ Uptime: {uptime}",
+    "adm_broadcast_ask"    : "📢 نامەکەت بنووسە بۆ برۆدکاست:\n(هەر جۆرێک — دەق، وێنە، ڤیدیۆ)",
+    "adm_block_ask"        : "🚫 ئایدی بەکارهێنەرەکە بنووسە بۆ بلۆک کردن:",
+    "adm_info_ask"         : "👤 ئایدی بەکارهێنەرەکە بنووسە:",
+    "sup_admins_title"     : "🛡 لیستی ئەدمینەکان ({count} ئەدمین)",
+    "sup_add_adm_ask"      : "✍️ ئایدی ئەدمینی نوێ بنووسە:",
+    # ── پانێڵ - بەشی سوپەر ──
+    "b_sup_vip"            : "💎 بەڕێوەبردنی VIP",
+    "b_sup_channels"       : "📢 بەڕێوەبردنی چەناڵەکان",
+    "b_sup_maint"          : "🛠 چاکسازی: {status}",
+    "b_sup_api"            : "🔌 ڕێکخستنی API",
+    "b_sup_botlang"        : "🌍 زمانی سەرەکی بۆت",
+    "sup_maint_on"         : "چالاکە ✅",
+    "sup_maint_off"        : "ناچالاکە ❌",
+    "sup_vip_title"        : "💎 لیستی VIPەکان ({count} کەس)",
+    "sup_add_vip_ask"      : "✍️ ئایدی بەکارهێنەرەکە بنووسە بۆ VIP کردن:",
+    "sup_ch_title"         : "📢 چەناڵەکان ({count} چەناڵ)",
+    "sup_ch_empty"         : "هیچ چەناڵێک نەدۆزرایەوە.",
+    "sup_ch_remove_q"      : "کام چەناڵ دەتەوێت بسڕیتەوە؟",
+    "sup_add_ch_ask"       : "✍️ یوزەرنەیمی چەناڵ بنووسە (نمونە: @mychannel):",
+    "sup_api_title"        : "🔌 هەڵبژاردنی API\n\nئێستا: {act}",
+    # ── پانێڵ - بەشی ئۆنەر ──
+    "b_own_super"          : "🌌 سوپەر ئەدمینەکان",
+    "b_own_welcome"        : "✉️ نامەی بەخێرهاتن",
+    "b_own_reset"          : "🔄 ڕێسەتی ئامار",
+    "b_own_backup"         : "💾 باکئەپ",
+    "own_super_title"      : "🌌 لیستی سوپەر ئەدمینەکان ({count} کەس)",
+    "own_add_sup_ask"      : "✍️ ئایدی سوپەر ئەدمینی نوێ بنووسە:",
+    "own_reset_done"       : "✅ ئامارەکان ڕێسەت کران.",
+    "own_backup_prep"      : "💾 باکئەپ ئامادە دەکرێت...",
     },
 
 # ─────────────────────────────────── ENGLISH ──────────────────────────────────
 "en": {
-    "welcome"         : "👋 Hello {name} {badge}\n\n📸 Welcome to Instagram Downloader Bot!\n🎬 Download videos and Reels without watermark.\n\n━━━━━━━━━━━━━━━━━━━\n👇 Send me an Instagram link:",
-    "help"            : "📚 How to Use\n\n1️⃣ Copy an Instagram video or Reel link.\n2️⃣ Paste it here.\n3️⃣ Get your video!\n\n✅ Supported:\n• instagram.com/reel/...\n• instagram.com/p/...\n\n💎 VIP: No forced join, faster downloads.\n📩 Contact: {dev}",
-    "profile"         : "👤 Profile Card\n\n🆔 ID: {id}\n👤 Name: {name}\n🔗 Username: @{user}\n📅 Joined: {date}\n💎 VIP: {vip}\n🌍 Language: {ulang}\n📥 Downloads: {dl}",
-    "vip_info"        : "💎 VIP Benefits\n\n✅ Skip forced channel joins.\n✅ Faster download speed.\n\nBuy VIP: {dev}",
-    "lang_title"      : "🌍 Choose your language:",
-    "lang_saved"      : "✅ Language changed!",
-    "bot_lang_title"  : "🌍 Choose the bot's default language:",
-    "bot_lang_saved"  : "✅ Bot default language changed to: {lang}",
-    "force_join"      : "🔒 Forced Join\nPlease join these channels first, then click '✅ Joined':",
-    "processing"      : "🔍 Looking up the link...\nPlease wait ⏳",
-    "found"           : "✅ <b>Your video is ready!</b>\n\n📐 Resolution: {width}x{height}\n\n<i>Downloaded via Instagram Bot 📥</i>",
-    "blocked_msg"     : "⛔ You are blocked.",
-    "maintenance_msg" : "🛠 Maintenance!\n\n⚙️ The bot is under a major update.\n⏳ We'll be back shortly!\n\n📩 Contact: {dev}",
-    "invalid_link"    : "❌ Invalid link or the video is not public!\n\nMake sure the link is:\n• instagram.com/reel/...\n• instagram.com/p/...",
-    "dl_fail"         : "❌ An error occurred! Could not download.\nPlease try again.",
-    "no_video"        : "❌ Video not found! This post has no video.",
-    "private_post"    : "🔒 This post is private!\nOnly public posts can be downloaded.",
-    "invalid_id"      : "❌ Invalid ID! Numbers only.",
-    "user_not_found"  : "⚠️ User not found.",
-    "broadcast_done"  : "📢 Broadcast complete\n✅ Reached: {ok}\n❌ Failed: {fail}",
-    "broadcast_sending": "📢 Sending... ({done}/{total})",
-    "welcome_set"     : "✅ Welcome message updated.",
-    "write_welcome"   : "✍️ Write the welcome message:\n(You can use {name} and {badge})",
-    "write_id"        : "✍️ Send the user ID:",
-    "write_ch"        : "✍️ Send channel username (e.g. @mychannel):",
-    "vip_yes"         : "Yes 💎",
-    "vip_no"          : "No",
-    "badge_owner"     : "👑",
-    "badge_super"     : "🌌",
-    "badge_admin"     : "🛡",
-    "badge_vip"       : "💎",
-    "new_user_notify" : "👤 New User!\n\n👤 Name: {name}\n🔗 Username: {uname}\n🆔 ID: <code>{uid}</code>\n🌍 App lang: {app_lang}\n📅 Date: {date}",
-    "b_notify_block"  : "🚫 Block",
-    "b_notify_vip"    : "💎 Make VIP",
-    "b_notify_admin"  : "🛡 Make Admin",
-    "b_notify_info"   : "👤 Info",
-    "act_blocked"     : "✅ Blocked: {id}",
-    "act_unblocked"   : "✅ Unblocked: {id}",
-    "act_vip_added"   : "✅ VIP added: {id}",
-    "act_vip_removed" : "✅ VIP removed: {id}",
-    "act_adm_added"   : "✅ Admin added: {id}",
-    "act_sup_added"   : "✅ Super admin added: {id}",
-    "act_ch_wrong_fmt": "❌ Wrong channel format! Example: @mychannel",
-    "sup_ch_added"    : "✅ Channel added: {ch}",
-    "userinfo_text"   : "👤 User Info\n\n👤 Name: {name}\n🔗 Username: @{user}\n🆔 ID: {id}\n💎 VIP: {vip}\n🌍 Language: {lang}\n📥 Downloads: {dl}\n📅 Joined: {date}",
-    "b_dl"            : "📥 New Download",
-    "b_profile"       : "👤 My Profile",
-    "b_vip"           : "💎 VIP Section",
-    "b_settings"      : "⚙️ Settings & Language",
-    "b_help"          : "ℹ️ Help",
-    "b_channel"       : "📢 Bot Channel",
-    "b_panel"         : "⚙️ Control Panel",
-    "b_back"          : "🔙 Back",
-    "b_ku"            : "🔴🔆🟢 Kurdish",
-    "b_en"            : "🇺🇸 English",
-    "b_ar"            : "🇸🇦 Arabic",
-    "b_cancel"        : "❌ Cancel",
-    "b_joined"        : "✅ I Joined",
-    "b_confirm_remove" : "✅ Yes, Remove",
-    "b_cancel_remove"  : "❌ No, Cancel",
+    "welcome"              : "👋 Hello {name} {badge}\n\n📸 Welcome to Instagram Downloader Bot!\n🎬 Download videos and Reels without watermark.\n\n━━━━━━━━━━━━━━━━━━━\n👇 Send me an Instagram link:",
+    "help"                 : "📚 How to Use\n\n1️⃣ Copy an Instagram video or Reel link.\n2️⃣ Paste it here.\n3️⃣ Get your video!\n\n✅ Supported:\n• instagram.com/reel/...\n• instagram.com/p/...\n\n💎 VIP: No forced join, faster downloads.\n📩 Contact: {dev}",
+    "profile"              : "👤 Profile Card\n\n🆔 ID: {id}\n👤 Name: {name}\n🔗 Username: @{user}\n📅 Joined: {date}\n💎 VIP: {vip}\n🌍 Language: {ulang}\n📥 Downloads: {dl}",
+    "vip_info"             : "💎 VIP Benefits\n\n✅ Skip forced channel joins.\n✅ Faster download speed.\n\nBuy VIP: {dev}",
+    "lang_title"           : "🌍 Choose your language:",
+    "lang_saved"           : "✅ Language changed!",
+    "bot_lang_title"       : "🌍 Choose the bot's default language:",
+    "bot_lang_saved"       : "✅ Bot default language changed to: {lang}",
+    "bot_lang_current"     : "Current language: {cur}",
+    "force_join"           : "🔒 Forced Join\nPlease join these channels first, then click '✅ Joined':",
+    "processing"           : "🔍 Looking up the link...\nPlease wait ⏳",
+    "found"                : "✅ <b>Your video is ready!</b>\n\n📐 Resolution: {width}x{height}\n\n<i>Downloaded via Instagram Bot 📥</i>",
+    "blocked_msg"          : "⛔ You are blocked.",
+    "maintenance_msg"      : "🛠 Maintenance!\n\n⚙️ The bot is under a major update.\n⏳ We'll be back shortly!\n\n📩 Contact: {dev}",
+    "invalid_link"         : "❌ Invalid link or the video is not public!\n\nMake sure the link is:\n• instagram.com/reel/...\n• instagram.com/p/...",
+    "dl_fail"              : "❌ An error occurred! Could not download.\nPlease try again.",
+    "no_video"             : "❌ Video not found! This post has no video.",
+    "private_post"         : "🔒 This post is private!\nOnly public posts can be downloaded.",
+    "invalid_id"           : "❌ Invalid ID! Numbers only.",
+    "user_not_found"       : "⚠️ User not found.",
+    "broadcast_done"       : "📢 Broadcast complete\n✅ Reached: {ok}\n❌ Failed: {fail}",
+    "broadcast_sending"    : "📢 Sending... ({done}/{total})",
+    "broadcast_progress"   : "📢 In progress... ({done}/{total})",
+    "welcome_set"          : "✅ Welcome message updated.",
+    "write_welcome"        : "✍️ Write the welcome message:\n(You can use {name} and {badge})",
+    "write_id"             : "✍️ Send the user ID:",
+    "write_ch"             : "✍️ Send channel username (e.g. @mychannel):",
+    "vip_yes"              : "Yes 💎",
+    "vip_no"               : "No",
+    "badge_owner"          : "👑",
+    "badge_super"          : "🌌",
+    "badge_admin"          : "🛡",
+    "badge_vip"            : "💎",
+    "new_user_notify"      : "👤 New User!\n\n👤 Name: {name}\n🔗 Username: {uname}\n🆔 ID: <code>{uid}</code>\n🌍 App lang: {app_lang}\n📅 Date: {date}",
+    "b_notify_block"       : "🚫 Block",
+    "b_notify_vip"         : "💎 Make VIP",
+    "b_notify_admin"       : "🛡 Make Admin",
+    "b_notify_info"        : "👤 Info",
+    "act_blocked"          : "✅ Blocked: {id}",
+    "act_unblocked"        : "✅ Unblocked: {id}",
+    "act_vip_added"        : "✅ VIP added: {id}",
+    "act_vip_removed"      : "✅ VIP removed: {id}",
+    "act_adm_added"        : "✅ Admin added: {id}",
+    "act_adm_removed"      : "✅ Admin removed: {id}",
+    "act_sup_added"        : "✅ Super admin added: {id}",
+    "act_sup_removed"      : "✅ Super admin removed: {id}",
+    "act_ch_wrong_fmt"     : "❌ Wrong channel format! Example: @mychannel",
+    "sup_ch_added"         : "✅ Channel added: {ch}",
+    "userinfo_text"        : "👤 User Info\n\n👤 Name: {name}\n🔗 Username: @{user}\n🆔 ID: {id}\n💎 VIP: {vip}\n🌍 Language: {lang}\n📥 Downloads: {dl}\n📅 Joined: {date}",
+    "b_dl"                 : "📥 New Download",
+    "b_profile"            : "👤 My Profile",
+    "b_vip"                : "💎 VIP Section",
+    "b_settings"           : "⚙️ Settings & Language",
+    "b_help"               : "ℹ️ Help",
+    "b_channel"            : "📢 Bot Channel",
+    "b_panel"              : "⚙️ Control Panel",
+    "b_back"               : "🔙 Back",
+    "b_ku"                 : "🔴🔆🟢 Kurdish",
+    "b_en"                 : "🇺🇸 English",
+    "b_ar"                 : "🇸🇦 Arabic",
+    "b_cancel"             : "❌ Cancel",
+    "b_joined"             : "✅ I Joined",
+    "b_confirm_remove"     : "✅ Yes, Remove",
+    "b_cancel_remove"      : "❌ No, Cancel",
+    "b_add"                : "➕ Add",
+    "b_remove"             : "➖ Remove",
+    "b_add_vip"            : "➕ Add VIP",
+    "b_rm_vip"             : "➖ Remove VIP",
+    "b_refresh"            : "🔄 Refresh",
+    "b_clear"              : "🗑 Clear",
     "confirm_remove_admin" : "⚠️ Are you sure you want to remove this admin?\n🆔 {id}",
     "confirm_remove_super" : "⚠️ Are you sure you want to remove this super admin?\n🆔 {id}",
     "confirm_remove_ch"    : "⚠️ Are you sure you want to remove this channel?\n{ch}",
-    "unified_panel_title" : "⚙️ Control Panel\n\n👥 Users: {users}\n💎 VIP: {vip}\n🚫 Blocked: {blocked}\n📥 Downloads: {dl}\n⏱ Uptime: {uptime}",
+    "unified_panel_title"  : "⚙️ Control Panel\n\n👥 Users: {users}\n💎 VIP: {vip}\n🚫 Blocked: {blocked}\n📥 Downloads: {dl}\n⏱ Uptime: {uptime}",
+    # ── Panel - Admin section ──
+    "b_adm_stats"          : "📊 Statistics",
+    "b_adm_broadcast"      : "📢 Broadcast",
+    "b_adm_block"          : "🚫 Block / User",
+    "b_adm_info"           : "👤 User Info",
+    "b_adm_admins"         : "🛡 Manage Admins",
+    "adm_stats_title"      : "📊 Statistics\n\n👥 Users: {users}\n💎 VIP: {vip}\n🚫 Blocked: {blocked}\n📥 Downloads: {dl}\n⏱ Uptime: {uptime}",
+    "adm_broadcast_ask"    : "📢 Write your broadcast message:\n(Any type — text, photo, video)",
+    "adm_block_ask"        : "🚫 Send the user ID to block:",
+    "adm_info_ask"         : "👤 Send the user ID:",
+    "sup_admins_title"     : "🛡 Admin List ({count} admins)",
+    "sup_add_adm_ask"      : "✍️ Send the new admin's ID:",
+    # ── Panel - Super section ──
+    "b_sup_vip"            : "💎 Manage VIP",
+    "b_sup_channels"       : "📢 Manage Channels",
+    "b_sup_maint"          : "🛠 Maintenance: {status}",
+    "b_sup_api"            : "🔌 API Settings",
+    "b_sup_botlang"        : "🌍 Bot Default Language",
+    "sup_maint_on"         : "Active ✅",
+    "sup_maint_off"        : "Inactive ❌",
+    "sup_vip_title"        : "💎 VIP List ({count} users)",
+    "sup_add_vip_ask"      : "✍️ Send the user ID to make VIP:",
+    "sup_ch_title"         : "📢 Channels ({count} channels)",
+    "sup_ch_empty"         : "No channels found.",
+    "sup_ch_remove_q"      : "Which channel do you want to remove?",
+    "sup_add_ch_ask"       : "✍️ Send channel username (e.g. @mychannel):",
+    "sup_api_title"        : "🔌 API Selection\n\nCurrent: {act}",
+    # ── Panel - Owner section ──
+    "b_own_super"          : "🌌 Super Admins",
+    "b_own_welcome"        : "✉️ Welcome Message",
+    "b_own_reset"          : "🔄 Reset Stats",
+    "b_own_backup"         : "💾 Backup",
+    "own_super_title"      : "🌌 Super Admin List ({count} users)",
+    "own_add_sup_ask"      : "✍️ Send the new super admin's ID:",
+    "own_reset_done"       : "✅ Statistics reset successfully.",
+    "own_backup_prep"      : "💾 Preparing backup...",
     },
 
 # ─────────────────────────────────── ARABIC ───────────────────────────────────
 "ar": {
-    "welcome"         : "👋 مرحباً {name} {badge}\n\n📸 أهلاً بك في بوت تنزيل انستغرام!\n🎬 حمّل الفيديوهات والريلز بدون علامة مائية.\n\n━━━━━━━━━━━━━━━━━━━\n👇 أرسل لي رابط انستغرام:",
-    "help"            : "📚 كيفية الاستخدام\n\n1️⃣ انسخ رابط الفيديو أو الريل من انستغرام.\n2️⃣ الصق الرابط هنا.\n3️⃣ احصل على الفيديو!\n\n✅ الروابط المدعومة:\n• instagram.com/reel/...\n• instagram.com/p/...\n\n💎 VIP: بدون اشتراك إجباري، سرعة أعلى.\n📩 للتواصل: {dev}",
-    "profile"         : "👤 بطاقة الملف الشخصي\n\n🆔 المعرف: {id}\n👤 الاسم: {name}\n🔗 اسم المستخدم: @{user}\n📅 تاريخ التسجيل: {date}\n💎 VIP: {vip}\n🌍 اللغة: {ulang}\n📥 التنزيلات: {dl}",
-    "vip_info"        : "💎 مميزات VIP\n\n✅ تخطي الاشتراك الإجباري.\n✅ سرعة تنزيل أعلى.\n\nلشراء VIP: {dev}",
-    "lang_title"      : "🌍 اختر لغتك:",
-    "lang_saved"      : "✅ تم تغيير اللغة!",
-    "bot_lang_title"  : "🌍 اختر اللغة الافتراضية للبوت:",
-    "bot_lang_saved"  : "✅ تم تغيير اللغة الافتراضية إلى: {lang}",
-    "force_join"      : "🔒 الاشتراك الإجباري\nيرجى الانضمام إلى هذه القنوات أولاً، ثم اضغط '✅ انضممت':",
-    "processing"      : "🔍 جاري البحث عن الرابط...\nانتظر لحظة ⏳",
-    "found"           : "✅ <b>الفيديو جاهز!</b>\n\n📐 الدقة: {width}x{height}\n\n<i>تم التنزيل عبر بوت انستغرام 📥</i>",
-    "blocked_msg"     : "⛔ أنت محظور.",
-    "maintenance_msg" : "🛠 صيانة!\n\n⚙️ البوت تحت تحديث كبير.\n⏳ سنعود قريباً!\n\n📩 للتواصل: {dev}",
-    "invalid_link"    : "❌ الرابط غير صحيح أو الفيديو غير عام!\n\nتأكد من أن الرابط:\n• instagram.com/reel/...\n• instagram.com/p/...",
-    "dl_fail"         : "❌ حدث خطأ! تعذر التنزيل.\nيرجى المحاولة مجدداً.",
-    "no_video"        : "❌ لم يتم العثور على فيديو! هذا المنشور لا يحتوي على فيديو.",
-    "private_post"    : "🔒 هذا المنشور خاص!\nلا يمكن تنزيل سوى المنشورات العامة.",
-    "invalid_id"      : "❌ معرف غير صحيح! أرقام فقط.",
-    "user_not_found"  : "⚠️ المستخدم غير موجود.",
-    "broadcast_done"  : "📢 اكتمل الإرسال\n✅ تم الإرسال: {ok}\n❌ فشل: {fail}",
-    "broadcast_sending": "📢 جاري الإرسال... ({done}/{total})",
-    "welcome_set"     : "✅ تم تحديث رسالة الترحيب.",
-    "write_welcome"   : "✍️ اكتب رسالة الترحيب:\n(يمكنك استخدام {name} و {badge})",
-    "write_id"        : "✍️ أرسل معرف المستخدم:",
-    "write_ch"        : "✍️ أرسل اسم القناة (مثال: @mychannel):",
-    "vip_yes"         : "نعم 💎",
-    "vip_no"          : "لا",
-    "badge_owner"     : "👑",
-    "badge_super"     : "🌌",
-    "badge_admin"     : "🛡",
-    "badge_vip"       : "💎",
-    "new_user_notify" : "👤 مستخدم جديد!\n\n👤 الاسم: {name}\n🔗 المعرف: {uname}\n🆔 ID: <code>{uid}</code>\n🌍 لغة التطبيق: {app_lang}\n📅 التاريخ: {date}",
-    "b_notify_block"  : "🚫 حظر",
-    "b_notify_vip"    : "💎 VIP",
-    "b_notify_admin"  : "🛡 مشرف",
-    "b_notify_info"   : "👤 معلومات",
-    "act_blocked"     : "✅ تم الحظر: {id}",
-    "act_unblocked"   : "✅ تم رفع الحظر: {id}",
-    "act_vip_added"   : "✅ تم إضافة VIP: {id}",
-    "act_vip_removed" : "✅ تم إزالة VIP: {id}",
-    "act_adm_added"   : "✅ تم إضافة مشرف: {id}",
-    "act_sup_added"   : "✅ تم إضافة سوبر مشرف: {id}",
-    "act_ch_wrong_fmt": "❌ صيغة القناة خاطئة! مثال: @mychannel",
-    "sup_ch_added"    : "✅ تمت إضافة القناة: {ch}",
-    "userinfo_text"   : "👤 معلومات المستخدم\n\n👤 الاسم: {name}\n🔗 المعرف: @{user}\n🆔 ID: {id}\n💎 VIP: {vip}\n🌍 اللغة: {lang}\n📥 تنزيلات: {dl}\n📅 تاريخ الانضمام: {date}",
-    "b_dl"            : "📥 تنزيل جديد",
-    "b_profile"       : "👤 ملفي الشخصي",
-    "b_vip"           : "💎 قسم VIP",
-    "b_settings"      : "⚙️ الإعدادات واللغة",
-    "b_help"          : "ℹ️ مساعدة",
-    "b_channel"       : "📢 قناة البوت",
-    "b_panel"         : "⚙️ لوحة التحكم",
-    "b_back"          : "🔙 رجوع",
-    "b_ku"            : "🔴🔆🟢 كردي",
-    "b_en"            : "🇺🇸 English",
-    "b_ar"            : "🇸🇦 العربية",
-    "b_cancel"        : "❌ إلغاء",
-    "b_joined"        : "✅ انضممت",
-    "b_confirm_remove": "✅ نعم، احذف",
-    "b_cancel_remove" : "❌ لا، إلغاء",
-    "confirm_remove_admin": "⚠️ هل تريد حذف هذا المشرف؟\n🆔 {id}",
-    "confirm_remove_super": "⚠️ هل تريد حذف هذا السوبر مشرف؟\n🆔 {id}",
-    "confirm_remove_ch"   : "⚠️ هل تريد حذف هذه القناة؟\n{ch}",
-    "unified_panel_title": "⚙️ لوحة التحكم\n\n👥 المستخدمون: {users}\n💎 VIP: {vip}\n🚫 المحظورون: {blocked}\n📥 التنزيلات: {dl}\n⏱ وقت التشغيل: {uptime}",
+    "welcome"              : "👋 مرحباً {name} {badge}\n\n📸 أهلاً بك في بوت تنزيل انستغرام!\n🎬 حمّل الفيديوهات والريلز بدون علامة مائية.\n\n━━━━━━━━━━━━━━━━━━━\n👇 أرسل لي رابط انستغرام:",
+    "help"                 : "📚 كيفية الاستخدام\n\n1️⃣ انسخ رابط الفيديو أو الريل من انستغرام.\n2️⃣ الصق الرابط هنا.\n3️⃣ احصل على الفيديو!\n\n✅ الروابط المدعومة:\n• instagram.com/reel/...\n• instagram.com/p/...\n\n💎 VIP: بدون اشتراك إجباري، سرعة أعلى.\n📩 للتواصل: {dev}",
+    "profile"              : "👤 بطاقة الملف الشخصي\n\n🆔 المعرف: {id}\n👤 الاسم: {name}\n🔗 اسم المستخدم: @{user}\n📅 تاريخ التسجيل: {date}\n💎 VIP: {vip}\n🌍 اللغة: {ulang}\n📥 التنزيلات: {dl}",
+    "vip_info"             : "💎 مميزات VIP\n\n✅ تخطي الاشتراك الإجباري.\n✅ سرعة تنزيل أعلى.\n\nلشراء VIP: {dev}",
+    "lang_title"           : "🌍 اختر لغتك:",
+    "lang_saved"           : "✅ تم تغيير اللغة!",
+    "bot_lang_title"       : "🌍 اختر اللغة الافتراضية للبوت:",
+    "bot_lang_saved"       : "✅ تم تغيير اللغة الافتراضية إلى: {lang}",
+    "bot_lang_current"     : "اللغة الحالية: {cur}",
+    "force_join"           : "🔒 الاشتراك الإجباري\nيرجى الانضمام إلى هذه القنوات أولاً، ثم اضغط '✅ انضممت':",
+    "processing"           : "🔍 جاري البحث عن الرابط...\nانتظر لحظة ⏳",
+    "found"                : "✅ <b>الفيديو جاهز!</b>\n\n📐 الدقة: {width}x{height}\n\n<i>تم التنزيل عبر بوت انستغرام 📥</i>",
+    "blocked_msg"          : "⛔ أنت محظور.",
+    "maintenance_msg"      : "🛠 صيانة!\n\n⚙️ البوت تحت تحديث كبير.\n⏳ سنعود قريباً!\n\n📩 للتواصل: {dev}",
+    "invalid_link"         : "❌ الرابط غير صحيح أو الفيديو غير عام!\n\nتأكد من أن الرابط:\n• instagram.com/reel/...\n• instagram.com/p/...",
+    "dl_fail"              : "❌ حدث خطأ! تعذر التنزيل.\nيرجى المحاولة مجدداً.",
+    "no_video"             : "❌ لم يتم العثور على فيديو! هذا المنشور لا يحتوي على فيديو.",
+    "private_post"         : "🔒 هذا المنشور خاص!\nلا يمكن تنزيل سوى المنشورات العامة.",
+    "invalid_id"           : "❌ معرف غير صحيح! أرقام فقط.",
+    "user_not_found"       : "⚠️ المستخدم غير موجود.",
+    "broadcast_done"       : "📢 اكتمل الإرسال\n✅ تم الإرسال: {ok}\n❌ فشل: {fail}",
+    "broadcast_sending"    : "📢 جاري الإرسال... ({done}/{total})",
+    "broadcast_progress"   : "📢 جاري... ({done}/{total})",
+    "welcome_set"          : "✅ تم تحديث رسالة الترحيب.",
+    "write_welcome"        : "✍️ اكتب رسالة الترحيب:\n(يمكنك استخدام {name} و {badge})",
+    "write_id"             : "✍️ أرسل معرف المستخدم:",
+    "write_ch"             : "✍️ أرسل اسم القناة (مثال: @mychannel):",
+    "vip_yes"              : "نعم 💎",
+    "vip_no"               : "لا",
+    "badge_owner"          : "👑",
+    "badge_super"          : "🌌",
+    "badge_admin"          : "🛡",
+    "badge_vip"            : "💎",
+    "new_user_notify"      : "👤 مستخدم جديد!\n\n👤 الاسم: {name}\n🔗 المعرف: {uname}\n🆔 ID: <code>{uid}</code>\n🌍 لغة التطبيق: {app_lang}\n📅 التاريخ: {date}",
+    "b_notify_block"       : "🚫 حظر",
+    "b_notify_vip"         : "💎 VIP",
+    "b_notify_admin"       : "🛡 مشرف",
+    "b_notify_info"        : "👤 معلومات",
+    "act_blocked"          : "✅ تم الحظر: {id}",
+    "act_unblocked"        : "✅ تم رفع الحظر: {id}",
+    "act_vip_added"        : "✅ تم إضافة VIP: {id}",
+    "act_vip_removed"      : "✅ تم إزالة VIP: {id}",
+    "act_adm_added"        : "✅ تم إضافة مشرف: {id}",
+    "act_adm_removed"      : "✅ تم إزالة المشرف: {id}",
+    "act_sup_added"        : "✅ تم إضافة سوبر مشرف: {id}",
+    "act_sup_removed"      : "✅ تم إزالة السوبر مشرف: {id}",
+    "act_ch_wrong_fmt"     : "❌ صيغة القناة خاطئة! مثال: @mychannel",
+    "sup_ch_added"         : "✅ تمت إضافة القناة: {ch}",
+    "userinfo_text"        : "👤 معلومات المستخدم\n\n👤 الاسم: {name}\n🔗 المعرف: @{user}\n🆔 ID: {id}\n💎 VIP: {vip}\n🌍 اللغة: {lang}\n📥 تنزيلات: {dl}\n📅 تاريخ الانضمام: {date}",
+    "b_dl"                 : "📥 تنزيل جديد",
+    "b_profile"            : "👤 ملفي الشخصي",
+    "b_vip"                : "💎 قسم VIP",
+    "b_settings"           : "⚙️ الإعدادات واللغة",
+    "b_help"               : "ℹ️ مساعدة",
+    "b_channel"            : "📢 قناة البوت",
+    "b_panel"              : "⚙️ لوحة التحكم",
+    "b_back"               : "🔙 رجوع",
+    "b_ku"                 : "🔴🔆🟢 كردي",
+    "b_en"                 : "🇺🇸 English",
+    "b_ar"                 : "🇸🇦 العربية",
+    "b_cancel"             : "❌ إلغاء",
+    "b_joined"             : "✅ انضممت",
+    "b_confirm_remove"     : "✅ نعم، احذف",
+    "b_cancel_remove"      : "❌ لا، إلغاء",
+    "b_add"                : "➕ إضافة",
+    "b_remove"             : "➖ حذف",
+    "b_add_vip"            : "➕ إضافة VIP",
+    "b_rm_vip"             : "➖ إزالة VIP",
+    "b_refresh"            : "🔄 تحديث",
+    "b_clear"              : "🗑 مسح",
+    "confirm_remove_admin" : "⚠️ هل تريد حذف هذا المشرف؟\n🆔 {id}",
+    "confirm_remove_super" : "⚠️ هل تريد حذف هذا السوبر مشرف؟\n🆔 {id}",
+    "confirm_remove_ch"    : "⚠️ هل تريد حذف هذه القناة؟\n{ch}",
+    "unified_panel_title"  : "⚙️ لوحة التحكم\n\n👥 المستخدمون: {users}\n💎 VIP: {vip}\n🚫 المحظورون: {blocked}\n📥 التنزيلات: {dl}\n⏱ وقت التشغيل: {uptime}",
+    # ── لوحة - قسم المشرف ──
+    "b_adm_stats"          : "📊 الإحصائيات",
+    "b_adm_broadcast"      : "📢 الإذاعة",
+    "b_adm_block"          : "🚫 حظر / مستخدم",
+    "b_adm_info"           : "👤 معلومات المستخدم",
+    "b_adm_admins"         : "🛡 إدارة المشرفين",
+    "adm_stats_title"      : "📊 الإحصائيات\n\n👥 المستخدمون: {users}\n💎 VIP: {vip}\n🚫 المحظورون: {blocked}\n📥 التنزيلات: {dl}\n⏱ وقت التشغيل: {uptime}",
+    "adm_broadcast_ask"    : "📢 اكتب رسالة الإذاعة:\n(أي نوع — نص، صورة، فيديو)",
+    "adm_block_ask"        : "🚫 أرسل معرف المستخدم للحظر:",
+    "adm_info_ask"         : "👤 أرسل معرف المستخدم:",
+    "sup_admins_title"     : "🛡 قائمة المشرفين ({count} مشرف)",
+    "sup_add_adm_ask"      : "✍️ أرسل معرف المشرف الجديد:",
+    # ── لوحة - قسم السوبر ──
+    "b_sup_vip"            : "💎 إدارة VIP",
+    "b_sup_channels"       : "📢 إدارة القنوات",
+    "b_sup_maint"          : "🛠 الصيانة: {status}",
+    "b_sup_api"            : "🔌 إعدادات API",
+    "b_sup_botlang"        : "🌍 لغة البوت الافتراضية",
+    "sup_maint_on"         : "نشط ✅",
+    "sup_maint_off"        : "غير نشط ❌",
+    "sup_vip_title"        : "💎 قائمة VIP ({count} مستخدم)",
+    "sup_add_vip_ask"      : "✍️ أرسل معرف المستخدم لترقيته VIP:",
+    "sup_ch_title"         : "📢 القنوات ({count} قناة)",
+    "sup_ch_empty"         : "لا توجد قنوات.",
+    "sup_ch_remove_q"      : "أي قناة تريد حذفها؟",
+    "sup_add_ch_ask"       : "✍️ أرسل اسم القناة (مثال: @mychannel):",
+    "sup_api_title"        : "🔌 اختيار API\n\nالحالي: {act}",
+    # ── لوحة - قسم المالك ──
+    "b_own_super"          : "🌌 السوبر مشرفين",
+    "b_own_welcome"        : "✉️ رسالة الترحيب",
+    "b_own_reset"          : "🔄 إعادة الإحصائيات",
+    "b_own_backup"         : "💾 نسخة احتياطية",
+    "own_super_title"      : "🌌 قائمة السوبر مشرفين ({count} مستخدم)",
+    "own_add_sup_ask"      : "✍️ أرسل معرف السوبر مشرف الجديد:",
+    "own_reset_done"       : "✅ تم إعادة تعيين الإحصائيات.",
+    "own_backup_prep"      : "💾 جاري تحضير النسخة الاحتياطية...",
     },
 }
 
@@ -306,11 +444,11 @@ def uptime() -> str:
 def back(lang, to="main_menu_render"):
     return [[InlineKeyboardButton(tx(lang, "b_back"), callback_data=to)]]
 
-def is_owner(uid):   return OWNER_ID and uid == OWNER_ID
-def is_super(uid):   return uid in super_admins_set or is_owner(uid)
-def is_admin(uid):   return uid in admins_set or is_super(uid)
-def is_vip(uid):     return uid in vip_set or is_super(uid)
-def is_blocked(uid): return uid in blocked_set
+def is_owner(uid):    return OWNER_ID and uid == OWNER_ID
+def is_super(uid):    return uid in super_admins_set or is_owner(uid)
+def is_admin(uid):    return uid in admins_set or is_super(uid)
+def is_vip(uid):      return uid in vip_set or is_super(uid)
+def is_blocked(uid):  return uid in blocked_set
 def bypass_join(uid): return (CFG.get("vip_bypass") and is_vip(uid)) or (CFG.get("admin_bypass") and is_admin(uid))
 
 async def db_get(path):
@@ -379,7 +517,7 @@ async def get_user_lang(uid: int) -> str:
 async def get_user_display(uid: int) -> str:
     ud = await db_get(f"users/{uid}")
     if ud:
-        name = ud.get("name", str(uid))
+        name     = ud.get("name", str(uid))
         username = ud.get("user", "")
         return f"{name} (@{username}) [{uid}]" if username else f"{name} [{uid}]"
     return str(uid)
@@ -413,7 +551,7 @@ async def fetch_instagram(url: str) -> dict | None:
 
     async with httpx.AsyncClient(timeout=timeout, headers=headers, follow_redirects=True) as c:
 
-        # Method 1: Instagram GraphQL API (rich data — title, owner, stats)
+        # Method 1: Instagram GraphQL API (rich data)
         try:
             import urllib.parse, json as _json
             variables = _json.dumps({"shortcode": post_id, "fetch_comment_count": "null",
@@ -440,24 +578,22 @@ async def fetch_instagram(url: str) -> dict | None:
             if r.status_code == 200:
                 media = r.json().get("data", {}).get("xdt_shortcode_media", {})
                 if media:
-                    dims   = media.get("dimensions", {})
-                    owner  = media.get("owner", {}).get("username", "")
-                    edges  = media.get("edge_media_to_caption", {}).get("edges", [])
-                    title  = edges[0].get("node", {}).get("text", "") if edges else ""
+                    dims     = media.get("dimensions", {})
+                    owner    = media.get("owner", {}).get("username", "")
+                    edges    = media.get("edge_media_to_caption", {}).get("edges", [])
+                    title    = edges[0].get("node", {}).get("text", "") if edges else ""
                     views    = media.get("video_view_count") or media.get("play_count") or 0
                     likes    = (media.get("edge_media_preview_like") or {}).get("count") or 0
                     comments = (media.get("edge_media_to_comment") or {}).get("count") or 0
-                    # audio
                     audio_url = None
-                    clips = media.get("clips_metadata") or {}
-                    orig  = (clips.get("original_sound_info") or {})
+                    clips     = media.get("clips_metadata") or {}
+                    orig      = (clips.get("original_sound_info") or {})
                     if orig.get("progressive_download_url"):
                         audio_url = orig["progressive_download_url"]
                     if not audio_url:
                         asset = ((clips.get("music_info") or {}).get("music_asset_info") or {})
                         if asset.get("progressive_download_url"):
                             audio_url = asset["progressive_download_url"]
-                    # video or carousel images
                     video_url = media.get("video_url") if media.get("is_video") else None
                     images = []
                     if media.get("edge_sidecar_to_children"):
@@ -487,7 +623,7 @@ async def fetch_instagram(url: str) -> dict | None:
                         }
         except: pass
 
-        # Method 2: og:video meta tag scraping (fallback — basic info only)
+        # Method 2: og:video meta tag scraping (fallback)
         try:
             r = await c.get(f"https://www.instagram.com/p/{post_id}/", headers={
                 "User-Agent": "facebookexternalhit/1.1",
@@ -499,10 +635,8 @@ async def fetch_instagram(url: str) -> dict | None:
                     video_url = html.unescape(video_match.group(1))
                     w = re.search(r'<meta property="og:video:width" content="([^"]+)"', r.text)
                     h = re.search(r'<meta property="og:video:height" content="([^"]+)"', r.text)
-                    # Try to get title and owner from og tags
                     t_m = re.search(r'<meta property="og:title" content="([^"]+)"', r.text)
                     raw_title = html.unescape(t_m.group(1)) if t_m else ""
-                    # og:title format is usually "username on Instagram: caption"
                     owner, title = "", raw_title
                     if " on Instagram" in raw_title:
                         parts = raw_title.split(" on Instagram", 1)
@@ -515,11 +649,9 @@ async def fetch_instagram(url: str) -> dict | None:
                         "audio_url": None,
                         "title":     clean_title(title),
                         "owner":     owner,
-                        "views":     0,
-                        "likes":     0,
-                        "comments":  0,
-                        "width":     w.group(1) if w else "?",
-                        "height":    h.group(1) if h else "?",
+                        "views":     0, "likes": 0, "comments": 0,
+                        "width":  w.group(1) if w else "?",
+                        "height": h.group(1) if h else "?",
                     }
         except: pass
 
@@ -649,14 +781,17 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         blocked_set.add(tid); await save_cfg()
         await q.edit_message_reply_markup(reply_markup=None)
         await q.message.reply_text(tx("ku", "act_blocked", id=tid)); return
+
     if data.startswith("quick_vip_"):
         tid = int(data.split("_")[2])
         vip_set.add(tid); await user_field(tid, "vip", True); await save_cfg()
         await q.message.reply_text(tx("ku", "act_vip_added", id=tid)); return
+
     if data.startswith("quick_adm_"):
         tid = int(data.split("_")[2])
         admins_set.add(tid); await save_cfg()
         await q.message.reply_text(tx("ku", "act_adm_added", id=tid)); return
+
     if data.startswith("quick_inf_"):
         tid = int(data.split("_")[2])
         ud = await user_get(tid)
@@ -762,21 +897,20 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         uids_list = await all_uids()
         kb = []
 
-        # Admin section (all admins see this)
+        # Admin section
         kb.append([
             InlineKeyboardButton(tx(lang, "b_adm_stats"),     callback_data="adm_stats"),
             InlineKeyboardButton(tx(lang, "b_adm_broadcast"), callback_data="adm_broadcast"),
         ])
         kb.append([
-            InlineKeyboardButton(tx(lang, "b_adm_block"),   callback_data="adm_block"),
-            InlineKeyboardButton(tx(lang, "b_adm_info"),    callback_data="adm_userinfo"),
+            InlineKeyboardButton(tx(lang, "b_adm_block"), callback_data="adm_block"),
+            InlineKeyboardButton(tx(lang, "b_adm_info"),  callback_data="adm_userinfo"),
         ])
-        # Admins can also add admins (but not remove)
         kb.append([
             InlineKeyboardButton(tx(lang, "b_adm_admins"), callback_data="adm_manage_admins"),
         ])
 
-        # Super section (super admins only)
+        # Super section
         if is_super(uid):
             kb.append([InlineKeyboardButton("─── 🌌 Super ───", callback_data="noop")])
             kb.append([
@@ -786,7 +920,7 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
             maint_status = tx(lang, "sup_maint_on") if CFG["maintenance"] else tx(lang, "sup_maint_off")
             kb.append([
                 InlineKeyboardButton(tx(lang, "b_sup_maint", status=maint_status), callback_data="sup_toggle_maint"),
-                InlineKeyboardButton(tx(lang, "b_sup_api"),    callback_data="sup_api_settings"),
+                InlineKeyboardButton(tx(lang, "b_sup_api"),                        callback_data="sup_api_settings"),
             ])
             kb.append([
                 InlineKeyboardButton(tx(lang, "b_sup_botlang"), callback_data="sup_bot_lang"),
@@ -841,18 +975,17 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         if data == "adm_block":
             waiting_state[uid] = "action_blk_add"
             await q.edit_message_text(
-                tx(lang, "adm_block_ask", write_id=tx(lang, "write_id")),
+                tx(lang, "adm_block_ask"),
                 reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(tx(lang, "b_cancel"), callback_data="panel_unified")]])
             ); return
 
         if data == "adm_userinfo":
             waiting_state[uid] = "action_info_check"
             await q.edit_message_text(
-                tx(lang, "adm_info_ask", write_id=tx(lang, "write_id")),
+                tx(lang, "adm_info_ask"),
                 reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(tx(lang, "b_cancel"), callback_data="panel_unified")]])
             ); return
 
-        # Admin manage admins — all admins can add, only super/owner can remove
         if data == "adm_manage_admins":
             adm_list = admins_set - {OWNER_ID}
             lines = []
@@ -865,7 +998,6 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
             kb = [
                 [InlineKeyboardButton(tx(lang, "b_add"), callback_data="sup_add_adm")],
             ]
-            # Only super/owner can see remove button
             if is_super(uid):
                 kb[0].append(InlineKeyboardButton(tx(lang, "b_remove"), callback_data="sup_rm_adm_list"))
             kb += back(lang, "panel_unified")
@@ -890,27 +1022,26 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
         if data == "sup_api_settings":
             act = CFG.get("active_api", "auto")
+            act_name = {"auto": "Auto", "tikwm": "TikWM", "hyper": "Hyper API"}.get(act, act)
             kb = [
                 [InlineKeyboardButton(f"{'✅ ' if act=='auto'  else ''}Auto",      callback_data="sup_setapi_auto")],
                 [InlineKeyboardButton(f"{'✅ ' if act=='tikwm' else ''}TikWM",     callback_data="sup_setapi_tikwm")],
                 [InlineKeyboardButton(f"{'✅ ' if act=='hyper' else ''}Hyper API", callback_data="sup_setapi_hyper")],
                 *back(lang, "panel_unified"),
             ]
-            await q.edit_message_text(tx(lang, "sup_api_title"), reply_markup=InlineKeyboardMarkup(kb)); return
+            await q.edit_message_text(tx(lang, "sup_api_title", act=act_name), reply_markup=InlineKeyboardMarkup(kb)); return
 
         if data.startswith("sup_setapi_"):
             CFG["active_api"] = data.split("_")[2]; await save_cfg()
             q.data = "sup_api_settings"; await on_callback(update, ctx); return
 
-        # Add admin (accessible from adm_manage_admins too)
         if data == "sup_add_adm":
             waiting_state[uid] = "action_adm_add"
             await q.edit_message_text(
-                tx(lang, "sup_add_adm_ask", write_id=tx(lang, "write_id")),
+                tx(lang, "sup_add_adm_ask"),
                 reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(tx(lang, "b_cancel"), callback_data="adm_manage_admins")]])
             ); return
 
-        # Remove admin — show list with confirm
         if data == "sup_rm_adm_list":
             adm_list = admins_set - super_admins_set - {OWNER_ID}
             if not adm_list:
@@ -957,7 +1088,7 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         if data == "sup_add_vip":
             waiting_state[uid] = "action_vip_add"
             await q.edit_message_text(
-                tx(lang, "sup_add_vip_ask", write_id=tx(lang, "write_id")),
+                tx(lang, "sup_add_vip_ask"),
                 reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(tx(lang, "b_cancel"), callback_data="sup_vips")]])
             ); return
 
@@ -989,9 +1120,7 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
             q.data = "sup_vips"; await on_callback(update, ctx); return
 
         if data == "sup_channels":
-            lst_lines = []
-            for ch in channels_list:
-                lst_lines.append(f"• {ch}")
+            lst_lines = [f"• {ch}" for ch in channels_list]
             text = tx(lang, "sup_ch_title", count=len(channels_list))
             if lst_lines:
                 text += "\n" + "\n".join(lst_lines)
@@ -1007,7 +1136,7 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         if data == "sup_add_ch":
             waiting_state[uid] = "action_add_ch"
             await q.edit_message_text(
-                tx(lang, "sup_add_ch_ask", write_ch=tx(lang, "write_ch")),
+                tx(lang, "sup_add_ch_ask"),
                 reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(tx(lang, "b_cancel"), callback_data="sup_channels")]])
             ); return
 
@@ -1056,7 +1185,7 @@ async def on_callback(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         if data == "own_add_sup":
             waiting_state[uid] = "action_sup_add"
             await q.edit_message_text(
-                tx(lang, "own_add_sup_ask", write_id=tx(lang, "write_id")),
+                tx(lang, "own_add_sup_ask"),
                 reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton(tx(lang, "b_cancel"), callback_data="own_super_adms")]])
             ); return
 
@@ -1132,7 +1261,7 @@ async def on_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
 
         if state.startswith("broadcast_"):
             all_u = await all_uids(); ok = fail = 0
-            st = await msg.reply_text(tx(lang, "broadcast_sending", total=len(all_u)))
+            st = await msg.reply_text(tx(lang, "broadcast_sending", done=0, total=len(all_u)))
             for i, t in enumerate(all_u):
                 try:
                     await ctx.bot.copy_message(chat_id=t, from_chat_id=msg.chat_id, message_id=msg.message_id)
@@ -1172,89 +1301,8 @@ async def on_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
                     dl=ud.get("dl", 0), date=ud.get("date","—")
                 ))
             elif action == "adm_add":
-                if not is_super(uid):
-                    # Regular admins can add admins (but not super admins)
-                    admins_set.add(tid); await save_cfg()
-                    await msg.reply_text(tx(lang, "act_adm_added", id=tid))
-                else:
-                    admins_set.add(tid); await save_cfg()
-                    await msg.reply_text(tx(lang, "act_adm_added", id=tid))
-            elif action == "sup_add":
-                super_admins_set.add(tid); admins_set.add(tid); await save_cfg()
-                await msg.reply_text(tx(lang, "act_sup_added", id=tid))
-            elif action == "vip_add":
-                vip_set.add(tid); await user_field(tid, "vip", True); await save_cfg()
-                await msg.reply_text(tx(lang, "act_vip_added", id=tid))
-            elif action == "vip_rm":
-                vip_set.discard(tid); await user_field(tid, "vip", False); await save_cfg()
-                await msg.reply_text(tx(lang, "act_vip_removed", id=tid))
-            return
-
-# ── Message Handler ────────────────────────────────────────────────────────────
-async def on_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-    if not update.message: return
-    uid  = update.effective_user.id
-    msg  = update.message
-    txt  = msg.text or ""
-    lang = await get_user_lang(uid)
-
-    # ── Waiting State ──────────────────────────────────────────────────────────
-    if uid in waiting_state:
-        state = waiting_state.pop(uid)
-
-        if state == "set_welcome":
-            CFG["welcome_msg"] = txt; await save_cfg()
-            await msg.reply_text(tx(lang, "welcome_set")); return
-
-        if state.startswith("broadcast_"):
-            all_u = await all_uids(); ok = fail = 0
-            st = await msg.reply_text(tx(lang, "broadcast_sending", total=len(all_u)))
-            for i, t in enumerate(all_u):
-                try:
-                    await ctx.bot.copy_message(chat_id=t, from_chat_id=msg.chat_id, message_id=msg.message_id)
-                    ok += 1; await asyncio.sleep(0.04)
-                except: fail += 1
-                if i % 100 == 0 and i > 0:
-                    try: await st.edit_text(tx(lang, "broadcast_progress", done=i, total=len(all_u)))
-                    except: pass
-            await st.edit_text(tx(lang, "broadcast_done", ok=ok, fail=fail)); return
-
-        if state.startswith("action_"):
-            action = state[len("action_"):]
-
-            if action == "add_ch":
-                ch = txt.strip()
-                if not ch.startswith("@") or len(ch) < 3:
-                    await msg.reply_text(tx(lang, "act_ch_wrong_fmt")); return
-                if ch not in channels_list:
-                    channels_list.append(ch); await save_cfg()
-                await msg.reply_text(tx(lang, "sup_ch_added", ch=ch)); return
-
-            if not txt.strip().isdigit():
-                await msg.reply_text(tx(lang, "invalid_id")); return
-            tid = int(txt.strip())
-
-            if action == "blk_add":
-                blocked_set.add(tid); await save_cfg()
-                await msg.reply_text(tx(lang, "act_blocked", id=tid))
-            elif action == "info_check":
-                ud = await user_get(tid)
-                if not ud: await msg.reply_text(tx(lang, "user_not_found")); return
-                ulang_str = LANG_NAMES.get(ud.get("lang", "—"), ud.get("lang", "—"))
-                vip_str   = tx(lang, "vip_yes") if ud.get("vip") else tx(lang, "vip_no")
-                await msg.reply_text(tx(lang, "userinfo_text",
-                    name=ud.get("name","—"), user=ud.get("user","—"),
-                    id=tid, vip=vip_str, lang=ulang_str,
-                    dl=ud.get("dl", 0), date=ud.get("date","—")
-                ))
-            elif action == "adm_add":
-                if not is_super(uid):
-                    # Regular admins can add admins (but not super admins)
-                    admins_set.add(tid); await save_cfg()
-                    await msg.reply_text(tx(lang, "act_adm_added", id=tid))
-                else:
-                    admins_set.add(tid); await save_cfg()
-                    await msg.reply_text(tx(lang, "act_adm_added", id=tid))
+                admins_set.add(tid); await save_cfg()
+                await msg.reply_text(tx(lang, "act_adm_added", id=tid))
             elif action == "sup_add":
                 super_admins_set.add(tid); admins_set.add(tid); await save_cfg()
                 await msg.reply_text(tx(lang, "act_sup_added", id=tid))
@@ -1306,7 +1354,6 @@ async def on_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         try: await status.delete()
         except: pass
 
-        # Caption with stats
         if data.get("title") or data.get("owner"):
             caption = (
                 f"📝 {html.escape(data.get('title',''))}\n"
@@ -1373,14 +1420,13 @@ async def health_check():
     d = "✅ Set" if DB_URL    else "❌ Missing (Firebase optional)"
     o = "✅ Set" if OWNER_ID  else "❌ Missing"
     return {
-        "status": "running",
+        "status"   : "running",
         "bot_token": t,
-        "firebase": d,
-        "owner_id": o,
-        "uptime": uptime(),
+        "firebase" : d,
+        "owner_id" : o,
+        "uptime"   : uptime(),
     }
 
-# REST API endpoint for direct use (website / other bots)
 @app.get("/api/video")
 async def get_video(postUrl: str = ""):
     if not postUrl:
