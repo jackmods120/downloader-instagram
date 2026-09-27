@@ -1,29 +1,32 @@
-# 📸 Instagram Downloader Telegram Bot
+# 📸 InstaJack v1 — Instagram Downloader Bot
 
-بۆتی تیلیگرام بۆ داگرتنی ڤیدیۆ و ریلزی ئینستاگرام.
+بۆتی تێلەگرام بۆ دابەزاندنی ڤیدیۆ، ڕیڵز، وێنە و **وێنەی پرۆفایل** لە ئینستاگرام (بێ واتەرمارک) — کوردی / English / العربية.
+هەروەکو خوشکی خۆی [JackTik](../jacktik) (بۆتی تیکتۆک) کارکردنی، بەڵام بۆ ئینستاگرام دروستکراوە.
 
-## پێویستەکان
+## چی هەیە
+- **ڤیدیۆ/ڕیڵز و وێنە:** بۆتەکە فایلەکە خۆی دایدەبەزێنێت و وەک فایل دەینێرێت بۆ تێلەگرام (نەک تەنیا لینکی CDN، کە زۆرجار بەسەردەچێت یان سەرناکەوێت).
+- **👤 وێنەی پرۆفایل:** یوزەرنەیمێک یان لینکی پرۆفایلێک بنێرە (نموونە `@username`)، بۆتەکە وێنەی پرۆفایلی HD وەردەگرێت و دەینێرێت.
+- سێ ڕێگای جیاواز بۆ دۆزینەوەی میدیا (GraphQL، og:meta scrape، third-party API) — ئەگەر یەکێکیان شکستی هێنا ئەوی تر تاقی دەکاتەوە.
+- فایلی سەرووی ٥٠MB: دوگمەی دابەزاندنی ڕاستەوخۆ.
+- هەمان تەلارسازی و چارەسەرکردنی کراشەکانی JackTik (state لە Firebase، لاکی هەر بەکارهێنەرێک، callback دووجار وەڵامنادرێتەوە، دووبارەبوونەوەی update چارەسەرکراوە).
+- ئەدمین ناتوانێت ئەدمینی تر زیاد بکات (تەنیا سوپەر ئەدمین)؛ دوگمەی لابردنی بلۆک هەیە.
 
-| Variable | پێویستە؟ | تێبینی |
+## ڕێکخستن (Vercel → Environment Variables)
+| گۆڕاو | پێویستە؟ | ڕوونکردنەوە |
 |---|---|---|
-| `BOT_TOKEN` | ✅ بەڵێ | لە @BotFather وەربگرە |
-| `OWNER_ID` | ✅ بەڵێ | ئایدیی تیلیگرامت |
-| `DB_URL` | ❌ ئارەزووی | Firebase — بۆ خەزنکردنی داتا |
-| `DB_SECRET` | ❌ ئارەزووی | Firebase secret |
-| `DEV_USERNAME` | ❌ ئارەزووی | یوزەرنەیمت بۆ پەیوەندی |
-| `CHANNEL_URL` | ❌ ئارەزووی | لینکی چەناڵەکەت |
+| `BOT_TOKEN` | بەڵێ | تۆکنی بۆت |
+| `DB_URL`, `DB_SECRET` | بەڵێ | Firebase Realtime Database |
+| `OWNER_ID` | **بەڵێ** | ئایدی ژمارەیی تێلەگرامی **خۆت**. ئەگەر دایمەنێیت، خاوەنی بۆت ئایدی گەشەپێدەری ڕەسەنە |
+| `WEBHOOK_SECRET` | پێشنیارکراو | بێ ئەمە هەر کەسێک URLـەکە بزانێت دەتوانێت نامەی ساختە بنێرێت |
+| `DEV_USERNAME`, `CHANNEL_URL`, `BOT_USERNAME` | نەخێر | ناو و لینکەکانی خۆت |
 
-## Deploy بکە
-
-1. لە Vercel، Environment Variables زیاد بکە
-2. Deploy بکە
-3. Webhook دامەزرێنە:
+## Webhook دامەزراندن (یەکجار)
 ```
-https://api.telegram.org/bot<TOKEN>/setWebhook?url=https://your-site.vercel.app/api/main
+https://api.telegram.org/bot<TOKEN>/setWebhook?url=https://<پرۆژەکەت>.vercel.app/api/main&secret_token=<WEBHOOK_SECRET>&drop_pending_updates=true
 ```
+پاشان `https://<پرۆژەکەت>.vercel.app/?key=<WEBHOOK_SECRET>` بکەرەوە بۆ پشکنینی دۆخ (Firebase، webhook، هەڵەکان).
 
-## API Endpoints
-
-- `GET /api/main` — Health check
-- `POST /api/main` — Telegram webhook
-- `GET /api/video?postUrl=...` — ڕاستەوخۆ ڤیدیۆ وەربگرە
+## تێبینی
+- `maxDuration: 60` لە `vercel.json` بۆ ئەوەیە دابەزاندن لە ١٠ چرکەدا نەوەستێت.
+- وێنەی پرۆفایل تەنیا بۆ ئەکاونتی **گشتی** کاردەکات — ئەکاونتی تایبەت (Private) پشتگیری ناکرێت.
+- برۆدکاست بۆ ژمارەیەکی زۆر (چەند هەزار) لە یەک داواکاری Vercel جێبەجێ ناکرێت؛ بۆتەکە کاتەکە دەپارێزێت و ئەوانەی ماون ڕادەگەیەنێت.
